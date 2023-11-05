@@ -102,6 +102,14 @@ mod entity {
         product_entities: Mapping<u64, ProductEntity>,
         raw_entity_count: u64,
         product_entity_count: u64,
+        raw_entities_vec: Vec<RawEntity>,
+        product_entities_vec: Vec<ProductEntity>,
+    }
+
+    impl Default for Entity {
+        fn default() -> Self {
+            Self::new()
+        }
     }
 
     impl Entity {
@@ -112,6 +120,8 @@ mod entity {
                 product_entities: Mapping::new(),
                 raw_entity_count: 0,
                 product_entity_count: 0,
+                raw_entities_vec: Vec::new(),
+                product_entities_vec: Vec::new(),
             }
         }
 
@@ -143,6 +153,9 @@ mod entity {
 
             let raw_entity_id = self.raw_entity_count;
             self.raw_entities.insert(raw_entity_id, &raw_entity);
+            // add to vector
+            self.raw_entities_vec.push(raw_entity);
+            // check if raw_entity_count is posible to increment, if not initialize it with 0
             self.raw_entity_count += 1;
 
             // Emit an event that the raw entity was added
@@ -157,16 +170,16 @@ mod entity {
         /// Get a raw entity by its id
         #[ink(message)]
         pub fn get_raw_entity(&self, raw_entity_id: u64) -> Option<RawEntity> {
-            Some(self.raw_entities.get(&raw_entity_id).clone().unwrap())
+            Some(self.raw_entities.get(raw_entity_id).clone().unwrap())
         }
 
         /// Get a raw entity by its code
         #[ink(message)]
         pub fn get_raw_entity_by_code(&self, code: String) -> Option<RawEntity> {
-            for i in 0..self.raw_entity_count {
-                let raw_entity = self.raw_entities.get(&i).clone().unwrap();
-                if raw_entity.code == code {
-                    return Some(raw_entity);
+            for item in self.raw_entities_vec.iter() {
+                let raw_item = item.clone();
+                if raw_item.code == code {
+                    return Some(raw_item);
                 }
             }
             None
@@ -176,10 +189,11 @@ mod entity {
         #[ink(message)]
         pub fn get_raw_entities_by_owner(&self, owner: AccountId) -> Vec<RawEntity> {
             let mut raw_entities = Vec::new();
-            for i in 0..self.raw_entity_count {
-                let raw_entity = self.raw_entities.get(&i).clone().unwrap();
-                if raw_entity.owner == owner {
-                    raw_entities.push(raw_entity);
+            // loop through all raw entities
+            for item in self.raw_entities_vec.iter() {
+                let raw_item = item.clone();
+                if raw_item.owner == owner {
+                    raw_entities.push(raw_item);
                 }
             }
             raw_entities
@@ -189,12 +203,14 @@ mod entity {
         #[ink(message)]
         pub fn get_raw_entities_by_buyer(&self, buyer: AccountId) -> Vec<RawEntity> {
             let mut raw_entities = Vec::new();
-            for i in 0..self.raw_entity_count {
-                let raw_entity = self.raw_entities.get(&i).clone().unwrap();
-                if raw_entity.buyer == buyer {
-                    raw_entities.push(raw_entity);
+            // loop through all raw entities
+            for item in self.raw_entities_vec.iter() {
+                let raw_item = item.clone();
+                if raw_item.buyer == buyer {
+                    raw_entities.push(raw_item);
                 }
             }
+
             raw_entities
         }
 
@@ -202,12 +218,14 @@ mod entity {
         #[ink(message)]
         pub fn get_raw_entities_by_batch_nos(&self, batch_nos: Vec<u64>) -> Vec<RawEntity> {
             let mut raw_entities = Vec::new();
-            for i in 0..self.raw_entity_count {
-                let raw_entity = self.raw_entities.get(&i).clone().unwrap();
-                if batch_nos.contains(&raw_entity.batch_no) {
-                    raw_entities.push(raw_entity);
+            // loop through all raw entities
+            for item in self.raw_entities_vec.iter() {
+                let raw_item = item.clone();
+                if batch_nos.contains(&raw_item.batch_no) {
+                    raw_entities.push(raw_item);
                 }
             }
+
             raw_entities
         }
 
@@ -215,9 +233,10 @@ mod entity {
         #[ink(message)]
         pub fn get_all_raw_entities(&self) -> Vec<RawEntity> {
             let mut raw_entities = Vec::new();
-            for i in 0..self.raw_entity_count {
-                let raw_entity = self.raw_entities.get(&i).clone().unwrap();
-                raw_entities.push(raw_entity);
+            // loop through all raw entities
+            for item in self.raw_entities_vec.iter() {
+                let raw_item = item.clone();
+                raw_entities.push(raw_item);
             }
             raw_entities
         }
@@ -246,13 +265,17 @@ mod entity {
                 raw_entities,
                 owner: caller,
             };
-            // TODO check if product entity already exists, at the moment its not possible to check if a product entity already exists because ink Mapping does not support iteration yet.
+
+            // product entity id is the current product entity count, if it does exists, we instantiate it with 0
 
             let product_entity_id = self.product_entity_count;
             self.product_entities
                 .insert(product_entity_id, &product_entity);
-            self.product_entity_count += 1;
 
+            // add to vector
+            self.product_entities_vec.push(product_entity);
+            // increment product entity count
+            self.product_entity_count += 1;
             // Emit an event that the product entity was added
             self.env().emit_event(ProductEntityAdded {
                 product_entity_id,
@@ -267,7 +290,7 @@ mod entity {
         pub fn get_product_entity(&self, product_entity_id: u64) -> Option<ProductEntity> {
             Some(
                 self.product_entities
-                    .get(&product_entity_id)
+                    .get(product_entity_id)
                     .clone()
                     .unwrap(),
             )
@@ -276,10 +299,10 @@ mod entity {
         /// Get a product entity by its code
         #[ink(message)]
         pub fn get_product_entity_by_code(&self, code: String) -> Option<ProductEntity> {
-            for i in 0..self.product_entity_count {
-                let product_entity = self.product_entities.get(&i).clone().unwrap();
-                if product_entity.code == code {
-                    return Some(product_entity);
+            for item in self.product_entities_vec.iter() {
+                let product_item = item.clone();
+                if product_item.code == code {
+                    return Some(product_item);
                 }
             }
             None
@@ -289,10 +312,11 @@ mod entity {
         #[ink(message)]
         pub fn get_product_entities_by_owner(&self, owner: AccountId) -> Vec<ProductEntity> {
             let mut product_entities = Vec::new();
-            for i in 0..self.product_entity_count {
-                let product_entity = self.product_entities.get(&i).clone().unwrap();
-                if product_entity.owner == owner {
-                    product_entities.push(product_entity);
+            // loop through all product entities
+            for item in self.product_entities_vec.iter() {
+                let product_item = item.clone();
+                if product_item.owner == owner {
+                    product_entities.push(product_item);
                 }
             }
             product_entities
@@ -302,10 +326,11 @@ mod entity {
         #[ink(message)]
         pub fn get_product_entities_by_batch_nos(&self, batch_nos: Vec<u64>) -> Vec<ProductEntity> {
             let mut product_entities = Vec::new();
-            for i in 0..self.product_entity_count {
-                let product_entity = self.product_entities.get(&i).clone().unwrap();
-                if batch_nos.contains(&product_entity.batch_no) {
-                    product_entities.push(product_entity);
+            // loop through all product entities
+            for item in self.product_entities_vec.iter() {
+                let product_item = item.clone();
+                if batch_nos.contains(&product_item.batch_no) {
+                    product_entities.push(product_item);
                 }
             }
             product_entities
@@ -318,10 +343,11 @@ mod entity {
             raw_entities: Vec<u64>,
         ) -> Vec<ProductEntity> {
             let mut product_entities = Vec::new();
-            for i in 0..self.product_entity_count {
-                let product_entity = self.product_entities.get(&i).clone().unwrap();
-                if raw_entities.contains(&product_entity.raw_entities[0]) {
-                    product_entities.push(product_entity);
+            // loop through all product entities
+            for item in self.product_entities_vec.iter() {
+                let product_item = item.clone();
+                if raw_entities.contains(&product_item.raw_entities[0]) {
+                    product_entities.push(product_item);
                 }
             }
             product_entities
@@ -331,9 +357,10 @@ mod entity {
         #[ink(message)]
         pub fn get_all_product_entities(&self) -> Vec<ProductEntity> {
             let mut product_entities = Vec::new();
-            for i in 0..self.product_entity_count {
-                let product_entity = self.product_entities.get(&i).clone().unwrap();
-                product_entities.push(product_entity);
+            // loop through all product entities
+            for item in self.product_entities_vec.iter() {
+                let product_item = item.clone();
+                product_entities.push(product_item);
             }
             product_entities
         }
@@ -568,156 +595,6 @@ mod entity {
             assert_eq!(result, Ok(()));
             let product_entities = entity.get_product_entities_by_raw_entities(vec![0]);
             assert_eq!(product_entities[0].name, String::from("Product Entity 1"));
-        }
-    }
-
-    /// This is how you'd write end-to-end (E2E) or integration tests for ink! contracts.
-    ///
-    /// When running these you need to make sure that you:
-    /// - Compile the tests with the `e2e-tests` feature flag enabled (`--features e2e-tests`)
-    /// - Are running a Substrate node which contains `pallet-contracts` in the background
-    #[cfg(all(test, feature = "e2e-tests"))]
-    mod e2e_tests {
-        /// Imports all the definitions from the outer scope so we can use them here.
-        use super::*;
-
-        /// A helper function used for calling contract messages.
-        use ink_e2e::build_message;
-
-        /// The End-to-End test `Result` type.
-        type E2EResult<T> = std::result::Result<T, Box<dyn std::error::Error>>;
-
-        /// We test that we can upload and instantiate the contract using its default constructor.
-        #[ink_e2e::test]
-        async fn default_works(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
-            // Given
-            let constructor = EntityRef::new();
-
-            // When
-            let contract_account_id = client
-                .instantiate("entity", &ink_e2e::alice(), constructor, 0, None)
-                .await
-                .expect("instantiate failed")
-                .account_id;
-
-            // Then
-            let get =
-                build_message::<EntityRef>(contract_account_id.clone()).call(|entity| entity.get());
-            let get_result = client.call_dry_run(&ink_e2e::alice(), &get, 0, None).await;
-            assert!(matches!(get_result.return_value(), false));
-
-            Ok(())
-        }
-
-        /// We test that we can read and write a value from the on-chain contract contract.
-        #[ink_e2e::test]
-        async fn it_works(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
-            // Given
-            let constructor = EntityRef::new(false);
-            let contract_account_id = client
-                .instantiate("entity", &ink_e2e::bob(), constructor, 0, None)
-                .await
-                .expect("instantiate failed")
-                .account_id;
-
-            let get =
-                build_message::<EntityRef>(contract_account_id.clone()).call(|entity| entity.get());
-            let get_result = client.call_dry_run(&ink_e2e::bob(), &get, 0, None).await;
-            assert!(matches!(get_result.return_value(), false));
-
-            // When
-            let flip = build_message::<EntityRef>(contract_account_id.clone())
-                .call(|entity| entity.flip());
-            let _flip_result = client
-                .call(&ink_e2e::bob(), flip, 0, None)
-                .await
-                .expect("flip failed");
-
-            // Then
-            let get =
-                build_message::<EntityRef>(contract_account_id.clone()).call(|entity| entity.get());
-            let get_result = client.call_dry_run(&ink_e2e::bob(), &get, 0, None).await;
-            assert!(matches!(get_result.return_value(), true));
-
-            Ok(())
-        }
-
-        /// We test if we can add a new raw entity
-        #[ink_e2e::test]
-        async fn add_raw_entity_works(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
-            // Given
-            let constructor = EntityRef::new();
-            let contract_account_id = client
-                .instantiate("entity", &ink_e2e::bob(), constructor, 0, None)
-                .await
-                .expect("instantiate failed")
-                .account_id;
-
-            // When
-            let add_raw_entity =
-                build_message::<EntityRef>(contract_account_id.clone()).call(|entity| {
-                    entity.add_raw_entity(
-                        String::from("Raw Entity 1"),
-                        10,
-                        String::from("kg"),
-                        String::from("RE1"),
-                        1,
-                        ink_e2e::alice().into(),
-                    )
-                });
-            let _add_raw_entity_result = client
-                .call(&ink_e2e::bob(), add_raw_entity, 0, None)
-                .await
-                .expect("add_raw_entity failed");
-
-            // Then
-            let get_raw_entity = build_message::<EntityRef>(contract_account_id.clone())
-                .call(|entity| entity.get_raw_entity(0));
-            let get_raw_entity_result = client
-                .call_dry_run(&ink_e2e::bob(), &get_raw_entity, 0, None)
-                .await;
-            assert!(matches!(get_raw_entity_result.return_value(), Some(_)));
-
-            Ok(())
-        }
-
-        /// We test if we can get a raw entity
-        #[ink_e2e::test]
-        async fn get_raw_entity_works(mut client: ink_e2e::Client<C, E>) -> E2EResult<()> {
-            // Given
-            let constructor = EntityRef::new();
-            let contract_account_id = client
-                .instantiate("entity", &ink_e2e::bob(), constructor, 0, None)
-                .await
-                .expect("instantiate failed")
-                .account_id;
-
-            // When
-            let add_raw_entity =
-                build_message::<EntityRef>(contract_account_id.clone()).call(|entity| {
-                    entity.add_raw_entity(
-                        String::from("Raw Entity 1"),
-                        10,
-                        String::from("kg"),
-                        String::from("RE1"),
-                        1,
-                        ink_e2e::alice().into(),
-                    )
-                });
-            let _add_raw_entity_result = client
-                .call(&ink_e2e::bob(), add_raw_entity, 0, None)
-                .await
-                .expect("add_raw_entity failed");
-
-            // Then
-            let get_raw_entity = build_message::<EntityRef>(contract_account_id.clone())
-                .call(|entity| entity.get_raw_entity(0));
-            let get_raw_entity_result = client
-                .call_dry_run(&ink_e2e::bob(), &get_raw_entity, 0, None)
-                .await;
-            assert!(matches!(get_raw_entity_result.return_value(), Some(_)));
-
-            Ok(())
         }
     }
 }

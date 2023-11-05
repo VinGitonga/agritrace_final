@@ -1,0 +1,30 @@
+version: '3.9'
+
+services:
+  nextjs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: vingitonga/nextjs
+    container_name: nextjs
+    restart: always
+    ports:
+      - 4000:4000
+    networks:
+      - nextjs-network
+  
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    environment:
+      - WATCHTOWER_CLEANUP=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --interval 30 nextjs
+    restart: always
+    networks:
+      - nextjs-network
+
+networks:
+  nextjs-network:
+    driver: bridge
