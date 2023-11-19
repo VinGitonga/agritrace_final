@@ -12,6 +12,11 @@ export interface IAuthStore {
 	logout: () => void;
 }
 
+/**
+ * A hook to access the auth store
+ * @returns the auth store
+ */
+
 const useAuth = createWithEqualityFn(
 	subscribeWithSelector(
 		persist<IAuthStore>(

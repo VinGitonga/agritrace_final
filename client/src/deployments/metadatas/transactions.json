@@ -1,0 +1,2014 @@
+{
+    "source": {
+      "hash": "0x5ef1877c6aa4b425d1c4a8957f4c4b75abe8586ac29c0368babf72426c9009aa",
+      "language": "ink! 5.0.0-alpha",
+      "compiler": "rustc 1.73.0",
+      "build_info": {
+        "build_mode": "Release",
+        "cargo_contract_version": "4.0.0-alpha",
+        "rust_toolchain": "stable-aarch64-apple-darwin",
+        "wasm_opt_settings": {
+          "keep_debug_symbols": false,
+          "optimization_passes": "Z"
+        }
+      }
+    },
+    "contract": {
+      "name": "transactions",
+      "version": "0.1.0",
+      "authors": [
+        "Dr. Sean Vincent gitongavincent64@gmail.com"
+      ]
+    },
+    "image": null,
+    "spec": {
+      "constructors": [
+        {
+          "args": [],
+          "default": false,
+          "docs": [],
+          "label": "new",
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink_primitives",
+              "ConstructorResult"
+            ],
+            "type": 20
+          },
+          "selector": "0x9bae9d5e"
+        }
+      ],
+      "docs": [],
+      "environment": {
+        "accountId": {
+          "displayName": [
+            "AccountId"
+          ],
+          "type": 3
+        },
+        "balance": {
+          "displayName": [
+            "Balance"
+          ],
+          "type": 34
+        },
+        "blockNumber": {
+          "displayName": [
+            "BlockNumber"
+          ],
+          "type": 1
+        },
+        "chainExtension": {
+          "displayName": [
+            "ChainExtension"
+          ],
+          "type": 36
+        },
+        "hash": {
+          "displayName": [
+            "Hash"
+          ],
+          "type": 35
+        },
+        "maxEventTopics": 4,
+        "staticBufferSize": 16384,
+        "timestamp": {
+          "displayName": [
+            "Timestamp"
+          ],
+          "type": 2
+        }
+      },
+      "events": [
+        {
+          "args": [
+            {
+              "docs": [],
+              "indexed": true,
+              "label": "entity",
+              "type": {
+                "displayName": [],
+                "type": 7
+              }
+            },
+            {
+              "docs": [],
+              "indexed": true,
+              "label": "buyer",
+              "type": {
+                "displayName": [],
+                "type": 3
+              }
+            },
+            {
+              "docs": [],
+              "indexed": true,
+              "label": "seller",
+              "type": {
+                "displayName": [],
+                "type": 3
+              }
+            }
+          ],
+          "docs": [],
+          "label": "TransactionEvent",
+          "module_path": "transactions::transactions",
+          "signature_topic": "0xcb4c058526ff00fe17af71df9733fab1f5d83123ba56c8aec2dd835e1adc8270"
+        },
+        {
+          "args": [
+            {
+              "docs": [],
+              "indexed": true,
+              "label": "product",
+              "type": {
+                "displayName": [],
+                "type": 15
+              }
+            },
+            {
+              "docs": [],
+              "indexed": true,
+              "label": "buyer",
+              "type": {
+                "displayName": [],
+                "type": 3
+              }
+            },
+            {
+              "docs": [],
+              "indexed": true,
+              "label": "seller",
+              "type": {
+                "displayName": [],
+                "type": 3
+              }
+            }
+          ],
+          "docs": [],
+          "label": "ProductTransactionEvent",
+          "module_path": "transactions::transactions",
+          "signature_topic": "0xcbd53f1ccd312a78232f1417e54971b0f2f01119f94288a73671f808b11fdb7b"
+        }
+      ],
+      "lang_error": {
+        "displayName": [
+          "ink",
+          "LangError"
+        ],
+        "type": 21
+      },
+      "messages": [
+        {
+          "args": [
+            {
+              "label": "entity_code",
+              "type": {
+                "displayName": [
+                  "String"
+                ],
+                "type": 0
+              }
+            },
+            {
+              "label": "quantity",
+              "type": {
+                "displayName": [
+                  "u32"
+                ],
+                "type": 1
+              }
+            },
+            {
+              "label": "quantity_unit",
+              "type": {
+                "displayName": [
+                  "String"
+                ],
+                "type": 0
+              }
+            },
+            {
+              "label": "batch_no",
+              "type": {
+                "displayName": [
+                  "u64"
+                ],
+                "type": 2
+              }
+            },
+            {
+              "label": "buyer",
+              "type": {
+                "displayName": [
+                  "AccountId"
+                ],
+                "type": 3
+              }
+            }
+          ],
+          "default": false,
+          "docs": [],
+          "label": "initiate_sell_entity",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 22
+          },
+          "selector": "0x65bd9018"
+        },
+        {
+          "args": [
+            {
+              "label": "entity_code",
+              "type": {
+                "displayName": [
+                  "String"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "default": false,
+          "docs": [],
+          "label": "purchase_entity",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 22
+          },
+          "selector": "0xa3c42258"
+        },
+        {
+          "args": [
+            {
+              "label": "entity_code",
+              "type": {
+                "displayName": [
+                  "String"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "default": false,
+          "docs": [],
+          "label": "complete_entity_purchase",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 22
+          },
+          "selector": "0x4a0dceaf"
+        },
+        {
+          "args": [
+            {
+              "label": "entity_code",
+              "type": {
+                "displayName": [
+                  "String"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "default": false,
+          "docs": [],
+          "label": "revert_entity_purchase",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 22
+          },
+          "selector": "0x3311716d"
+        },
+        {
+          "args": [
+            {
+              "label": "entity_code",
+              "type": {
+                "displayName": [
+                  "String"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "default": false,
+          "docs": [],
+          "label": "reject_entity_purchase",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 22
+          },
+          "selector": "0x19b60dfb"
+        },
+        {
+          "args": [
+            {
+              "label": "entity_code",
+              "type": {
+                "displayName": [
+                  "String"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "default": false,
+          "docs": [],
+          "label": "get_entity_purchase",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 25
+          },
+          "selector": "0xed04a6df"
+        },
+        {
+          "args": [],
+          "default": false,
+          "docs": [],
+          "label": "get_entity_purchase_count",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 27
+          },
+          "selector": "0xb0998317"
+        },
+        {
+          "args": [],
+          "default": false,
+          "docs": [],
+          "label": "get_entity_purchase_transactions",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 28
+          },
+          "selector": "0xb8298971"
+        },
+        {
+          "args": [
+            {
+              "label": "seller",
+              "type": {
+                "displayName": [
+                  "AccountId"
+                ],
+                "type": 3
+              }
+            }
+          ],
+          "default": false,
+          "docs": [],
+          "label": "get_entity_purchase_transactions_by_seller",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 28
+          },
+          "selector": "0x2116fdec"
+        },
+        {
+          "args": [
+            {
+              "label": "buyer",
+              "type": {
+                "displayName": [
+                  "AccountId"
+                ],
+                "type": 3
+              }
+            }
+          ],
+          "default": false,
+          "docs": [],
+          "label": "get_entity_purchase_transactions_by_buyer",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 28
+          },
+          "selector": "0x6162787a"
+        },
+        {
+          "args": [
+            {
+              "label": "product_code",
+              "type": {
+                "displayName": [
+                  "String"
+                ],
+                "type": 0
+              }
+            },
+            {
+              "label": "quantity",
+              "type": {
+                "displayName": [
+                  "u32"
+                ],
+                "type": 1
+              }
+            },
+            {
+              "label": "quantity_unit",
+              "type": {
+                "displayName": [
+                  "String"
+                ],
+                "type": 0
+              }
+            },
+            {
+              "label": "batch_no",
+              "type": {
+                "displayName": [
+                  "Vec"
+                ],
+                "type": 13
+              }
+            },
+            {
+              "label": "buyer",
+              "type": {
+                "displayName": [
+                  "AccountId"
+                ],
+                "type": 3
+              }
+            },
+            {
+              "label": "serial_no",
+              "type": {
+                "displayName": [
+                  "String"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "default": false,
+          "docs": [],
+          "label": "sell_product",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 22
+          },
+          "selector": "0x6a67086f"
+        },
+        {
+          "args": [
+            {
+              "label": "product_code",
+              "type": {
+                "displayName": [
+                  "String"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "default": false,
+          "docs": [],
+          "label": "purchase_product",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 22
+          },
+          "selector": "0xced1e376"
+        },
+        {
+          "args": [
+            {
+              "label": "product_code",
+              "type": {
+                "displayName": [
+                  "String"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "default": false,
+          "docs": [],
+          "label": "complete_product_purchase",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 22
+          },
+          "selector": "0x62fee3cf"
+        },
+        {
+          "args": [
+            {
+              "label": "product_code",
+              "type": {
+                "displayName": [
+                  "String"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "default": false,
+          "docs": [],
+          "label": "revert_product_purchase",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 22
+          },
+          "selector": "0x41af5d47"
+        },
+        {
+          "args": [
+            {
+              "label": "product_code",
+              "type": {
+                "displayName": [
+                  "String"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "default": false,
+          "docs": [],
+          "label": "reject_product_purchase",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 22
+          },
+          "selector": "0xa49faefe"
+        },
+        {
+          "args": [
+            {
+              "label": "product_code",
+              "type": {
+                "displayName": [
+                  "String"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "default": false,
+          "docs": [],
+          "label": "get_product_purchase",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 30
+          },
+          "selector": "0x49fcfb1d"
+        },
+        {
+          "args": [],
+          "default": false,
+          "docs": [],
+          "label": "get_product_purchase_count",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 27
+          },
+          "selector": "0xdd71ab61"
+        },
+        {
+          "args": [],
+          "default": false,
+          "docs": [],
+          "label": "get_product_purchase_transactions",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 32
+          },
+          "selector": "0x7c6ad1f0"
+        },
+        {
+          "args": [
+            {
+              "label": "seller",
+              "type": {
+                "displayName": [
+                  "AccountId"
+                ],
+                "type": 3
+              }
+            }
+          ],
+          "default": false,
+          "docs": [],
+          "label": "get_product_purchase_transactions_by_seller",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 32
+          },
+          "selector": "0xa6d1effb"
+        },
+        {
+          "args": [
+            {
+              "label": "buyer",
+              "type": {
+                "displayName": [
+                  "AccountId"
+                ],
+                "type": 3
+              }
+            }
+          ],
+          "default": false,
+          "docs": [],
+          "label": "get_product_purchase_transactions_by_buyer",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 32
+          },
+          "selector": "0xf6cd2abd"
+        },
+        {
+          "args": [
+            {
+              "label": "serial_no",
+              "type": {
+                "displayName": [
+                  "String"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "default": false,
+          "docs": [],
+          "label": "get_product_purchase_transactions_by_serial_no",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 32
+          },
+          "selector": "0xb3cd7dfe"
+        }
+      ]
+    },
+    "storage": {
+      "root": {
+        "layout": {
+          "struct": {
+            "fields": [
+              {
+                "layout": {
+                  "root": {
+                    "layout": {
+                      "struct": {
+                        "fields": [
+                          {
+                            "layout": {
+                              "leaf": {
+                                "key": "0xc444be9a",
+                                "ty": 0
+                              }
+                            },
+                            "name": "entity_code"
+                          },
+                          {
+                            "layout": {
+                              "leaf": {
+                                "key": "0xc444be9a",
+                                "ty": 1
+                              }
+                            },
+                            "name": "quantity"
+                          },
+                          {
+                            "layout": {
+                              "leaf": {
+                                "key": "0xc444be9a",
+                                "ty": 0
+                              }
+                            },
+                            "name": "quantity_unit"
+                          },
+                          {
+                            "layout": {
+                              "leaf": {
+                                "key": "0xc444be9a",
+                                "ty": 2
+                              }
+                            },
+                            "name": "batch_no"
+                          },
+                          {
+                            "layout": {
+                              "leaf": {
+                                "key": "0xc444be9a",
+                                "ty": 2
+                              }
+                            },
+                            "name": "created_at"
+                          },
+                          {
+                            "layout": {
+                              "leaf": {
+                                "key": "0xc444be9a",
+                                "ty": 3
+                              }
+                            },
+                            "name": "buyer"
+                          },
+                          {
+                            "layout": {
+                              "leaf": {
+                                "key": "0xc444be9a",
+                                "ty": 3
+                              }
+                            },
+                            "name": "seller"
+                          },
+                          {
+                            "layout": {
+                              "enum": {
+                                "dispatchKey": "0xc444be9a",
+                                "name": "TransactionStatus",
+                                "variants": {
+                                  "0": {
+                                    "fields": [],
+                                    "name": "Initiated"
+                                  },
+                                  "1": {
+                                    "fields": [],
+                                    "name": "InProgress"
+                                  },
+                                  "2": {
+                                    "fields": [],
+                                    "name": "Completed"
+                                  },
+                                  "3": {
+                                    "fields": [],
+                                    "name": "Reverted"
+                                  },
+                                  "4": {
+                                    "fields": [],
+                                    "name": "Reject"
+                                  }
+                                }
+                              }
+                            },
+                            "name": "status"
+                          },
+                          {
+                            "layout": {
+                              "leaf": {
+                                "key": "0xc444be9a",
+                                "ty": 2
+                              }
+                            },
+                            "name": "updated_at"
+                          }
+                        ],
+                        "name": "EntityPurchase"
+                      }
+                    },
+                    "root_key": "0xc444be9a",
+                    "ty": 6
+                  }
+                },
+                "name": "entity_purchases"
+              },
+              {
+                "layout": {
+                  "root": {
+                    "layout": {
+                      "struct": {
+                        "fields": [
+                          {
+                            "layout": {
+                              "leaf": {
+                                "key": "0xadd59f5c",
+                                "ty": 0
+                              }
+                            },
+                            "name": "product_code"
+                          },
+                          {
+                            "layout": {
+                              "leaf": {
+                                "key": "0xadd59f5c",
+                                "ty": 1
+                              }
+                            },
+                            "name": "quantity"
+                          },
+                          {
+                            "layout": {
+                              "leaf": {
+                                "key": "0xadd59f5c",
+                                "ty": 0
+                              }
+                            },
+                            "name": "quantity_unit"
+                          },
+                          {
+                            "layout": {
+                              "leaf": {
+                                "key": "0xadd59f5c",
+                                "ty": 13
+                              }
+                            },
+                            "name": "batch_no"
+                          },
+                          {
+                            "layout": {
+                              "leaf": {
+                                "key": "0xadd59f5c",
+                                "ty": 2
+                              }
+                            },
+                            "name": "created_at"
+                          },
+                          {
+                            "layout": {
+                              "leaf": {
+                                "key": "0xadd59f5c",
+                                "ty": 3
+                              }
+                            },
+                            "name": "buyer"
+                          },
+                          {
+                            "layout": {
+                              "leaf": {
+                                "key": "0xadd59f5c",
+                                "ty": 3
+                              }
+                            },
+                            "name": "seller"
+                          },
+                          {
+                            "layout": {
+                              "enum": {
+                                "dispatchKey": "0xadd59f5c",
+                                "name": "TransactionStatus",
+                                "variants": {
+                                  "0": {
+                                    "fields": [],
+                                    "name": "Initiated"
+                                  },
+                                  "1": {
+                                    "fields": [],
+                                    "name": "InProgress"
+                                  },
+                                  "2": {
+                                    "fields": [],
+                                    "name": "Completed"
+                                  },
+                                  "3": {
+                                    "fields": [],
+                                    "name": "Reverted"
+                                  },
+                                  "4": {
+                                    "fields": [],
+                                    "name": "Reject"
+                                  }
+                                }
+                              }
+                            },
+                            "name": "status"
+                          },
+                          {
+                            "layout": {
+                              "leaf": {
+                                "key": "0xadd59f5c",
+                                "ty": 2
+                              }
+                            },
+                            "name": "updated_at"
+                          },
+                          {
+                            "layout": {
+                              "leaf": {
+                                "key": "0xadd59f5c",
+                                "ty": 0
+                              }
+                            },
+                            "name": "serial_no"
+                          }
+                        ],
+                        "name": "ProductPurchase"
+                      }
+                    },
+                    "root_key": "0xadd59f5c",
+                    "ty": 14
+                  }
+                },
+                "name": "product_purchases"
+              },
+              {
+                "layout": {
+                  "leaf": {
+                    "key": "0x00000000",
+                    "ty": 2
+                  }
+                },
+                "name": "entity_purchase_count"
+              },
+              {
+                "layout": {
+                  "leaf": {
+                    "key": "0x00000000",
+                    "ty": 2
+                  }
+                },
+                "name": "product_purchase_count"
+              },
+              {
+                "layout": {
+                  "leaf": {
+                    "key": "0x00000000",
+                    "ty": 18
+                  }
+                },
+                "name": "entity_purchase_vec"
+              },
+              {
+                "layout": {
+                  "leaf": {
+                    "key": "0x00000000",
+                    "ty": 18
+                  }
+                },
+                "name": "product_purchase_vec"
+              }
+            ],
+            "name": "Transactions"
+          }
+        },
+        "root_key": "0x00000000",
+        "ty": 19
+      }
+    },
+    "types": [
+      {
+        "id": 0,
+        "type": {
+          "def": {
+            "primitive": "str"
+          }
+        }
+      },
+      {
+        "id": 1,
+        "type": {
+          "def": {
+            "primitive": "u32"
+          }
+        }
+      },
+      {
+        "id": 2,
+        "type": {
+          "def": {
+            "primitive": "u64"
+          }
+        }
+      },
+      {
+        "id": 3,
+        "type": {
+          "def": {
+            "composite": {
+              "fields": [
+                {
+                  "type": 4,
+                  "typeName": "[u8; 32]"
+                }
+              ]
+            }
+          },
+          "path": [
+            "ink_primitives",
+            "types",
+            "AccountId"
+          ]
+        }
+      },
+      {
+        "id": 4,
+        "type": {
+          "def": {
+            "array": {
+              "len": 32,
+              "type": 5
+            }
+          }
+        }
+      },
+      {
+        "id": 5,
+        "type": {
+          "def": {
+            "primitive": "u8"
+          }
+        }
+      },
+      {
+        "id": 6,
+        "type": {
+          "def": {
+            "composite": {}
+          },
+          "params": [
+            {
+              "name": "K",
+              "type": 0
+            },
+            {
+              "name": "V",
+              "type": 7
+            },
+            {
+              "name": "KeyType",
+              "type": 9
+            }
+          ],
+          "path": [
+            "ink_storage",
+            "lazy",
+            "mapping",
+            "Mapping"
+          ]
+        }
+      },
+      {
+        "id": 7,
+        "type": {
+          "def": {
+            "composite": {
+              "fields": [
+                {
+                  "name": "entity_code",
+                  "type": 0,
+                  "typeName": "String"
+                },
+                {
+                  "name": "quantity",
+                  "type": 1,
+                  "typeName": "u32"
+                },
+                {
+                  "name": "quantity_unit",
+                  "type": 0,
+                  "typeName": "String"
+                },
+                {
+                  "name": "batch_no",
+                  "type": 2,
+                  "typeName": "u64"
+                },
+                {
+                  "name": "created_at",
+                  "type": 2,
+                  "typeName": "Timestamp"
+                },
+                {
+                  "name": "buyer",
+                  "type": 3,
+                  "typeName": "AccountId"
+                },
+                {
+                  "name": "seller",
+                  "type": 3,
+                  "typeName": "AccountId"
+                },
+                {
+                  "name": "status",
+                  "type": 8,
+                  "typeName": "TransactionStatus"
+                },
+                {
+                  "name": "updated_at",
+                  "type": 2,
+                  "typeName": "Timestamp"
+                }
+              ]
+            }
+          },
+          "path": [
+            "transactions",
+            "transactions",
+            "EntityPurchase"
+          ]
+        }
+      },
+      {
+        "id": 8,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "index": 0,
+                  "name": "Initiated"
+                },
+                {
+                  "index": 1,
+                  "name": "InProgress"
+                },
+                {
+                  "index": 2,
+                  "name": "Completed"
+                },
+                {
+                  "index": 3,
+                  "name": "Reverted"
+                },
+                {
+                  "index": 4,
+                  "name": "Reject"
+                }
+              ]
+            }
+          },
+          "path": [
+            "transactions",
+            "transactions",
+            "TransactionStatus"
+          ]
+        }
+      },
+      {
+        "id": 9,
+        "type": {
+          "def": {
+            "composite": {}
+          },
+          "params": [
+            {
+              "name": "L",
+              "type": 10
+            },
+            {
+              "name": "R",
+              "type": 11
+            }
+          ],
+          "path": [
+            "ink_storage_traits",
+            "impls",
+            "ResolverKey"
+          ]
+        }
+      },
+      {
+        "id": 10,
+        "type": {
+          "def": {
+            "composite": {}
+          },
+          "path": [
+            "ink_storage_traits",
+            "impls",
+            "AutoKey"
+          ]
+        }
+      },
+      {
+        "id": 11,
+        "type": {
+          "def": {
+            "composite": {}
+          },
+          "params": [
+            {
+              "name": "ParentKey",
+              "type": 12
+            }
+          ],
+          "path": [
+            "ink_storage_traits",
+            "impls",
+            "ManualKey"
+          ]
+        }
+      },
+      {
+        "id": 12,
+        "type": {
+          "def": {
+            "tuple": []
+          }
+        }
+      },
+      {
+        "id": 13,
+        "type": {
+          "def": {
+            "sequence": {
+              "type": 2
+            }
+          }
+        }
+      },
+      {
+        "id": 14,
+        "type": {
+          "def": {
+            "composite": {}
+          },
+          "params": [
+            {
+              "name": "K",
+              "type": 0
+            },
+            {
+              "name": "V",
+              "type": 15
+            },
+            {
+              "name": "KeyType",
+              "type": 16
+            }
+          ],
+          "path": [
+            "ink_storage",
+            "lazy",
+            "mapping",
+            "Mapping"
+          ]
+        }
+      },
+      {
+        "id": 15,
+        "type": {
+          "def": {
+            "composite": {
+              "fields": [
+                {
+                  "name": "product_code",
+                  "type": 0,
+                  "typeName": "String"
+                },
+                {
+                  "name": "quantity",
+                  "type": 1,
+                  "typeName": "u32"
+                },
+                {
+                  "name": "quantity_unit",
+                  "type": 0,
+                  "typeName": "String"
+                },
+                {
+                  "name": "batch_no",
+                  "type": 13,
+                  "typeName": "Vec<u64>"
+                },
+                {
+                  "name": "created_at",
+                  "type": 2,
+                  "typeName": "Timestamp"
+                },
+                {
+                  "name": "buyer",
+                  "type": 3,
+                  "typeName": "AccountId"
+                },
+                {
+                  "name": "seller",
+                  "type": 3,
+                  "typeName": "AccountId"
+                },
+                {
+                  "name": "status",
+                  "type": 8,
+                  "typeName": "TransactionStatus"
+                },
+                {
+                  "name": "updated_at",
+                  "type": 2,
+                  "typeName": "Timestamp"
+                },
+                {
+                  "name": "serial_no",
+                  "type": 0,
+                  "typeName": "String"
+                }
+              ]
+            }
+          },
+          "path": [
+            "transactions",
+            "transactions",
+            "ProductPurchase"
+          ]
+        }
+      },
+      {
+        "id": 16,
+        "type": {
+          "def": {
+            "composite": {}
+          },
+          "params": [
+            {
+              "name": "L",
+              "type": 10
+            },
+            {
+              "name": "R",
+              "type": 17
+            }
+          ],
+          "path": [
+            "ink_storage_traits",
+            "impls",
+            "ResolverKey"
+          ]
+        }
+      },
+      {
+        "id": 17,
+        "type": {
+          "def": {
+            "composite": {}
+          },
+          "params": [
+            {
+              "name": "ParentKey",
+              "type": 12
+            }
+          ],
+          "path": [
+            "ink_storage_traits",
+            "impls",
+            "ManualKey"
+          ]
+        }
+      },
+      {
+        "id": 18,
+        "type": {
+          "def": {
+            "sequence": {
+              "type": 0
+            }
+          }
+        }
+      },
+      {
+        "id": 19,
+        "type": {
+          "def": {
+            "composite": {
+              "fields": [
+                {
+                  "name": "entity_purchases",
+                  "type": 6,
+                  "typeName": "<Mapping<String, EntityPurchase> as::ink::storage::traits::\nAutoStorableHint<::ink::storage::traits::ManualKey<3292839578u32,\n()>,>>::Type"
+                },
+                {
+                  "name": "product_purchases",
+                  "type": 14,
+                  "typeName": "<Mapping<String, ProductPurchase> as::ink::storage::traits::\nAutoStorableHint<::ink::storage::traits::ManualKey<2916458332u32,\n()>,>>::Type"
+                },
+                {
+                  "name": "entity_purchase_count",
+                  "type": 2,
+                  "typeName": "<u64 as::ink::storage::traits::AutoStorableHint<::ink::storage\n::traits::ManualKey<4114745163u32, ()>,>>::Type"
+                },
+                {
+                  "name": "product_purchase_count",
+                  "type": 2,
+                  "typeName": "<u64 as::ink::storage::traits::AutoStorableHint<::ink::storage\n::traits::ManualKey<1877856796u32, ()>,>>::Type"
+                },
+                {
+                  "name": "entity_purchase_vec",
+                  "type": 18,
+                  "typeName": "<Vec<String> as::ink::storage::traits::AutoStorableHint<::ink\n::storage::traits::ManualKey<2619596300u32, ()>,>>::Type"
+                },
+                {
+                  "name": "product_purchase_vec",
+                  "type": 18,
+                  "typeName": "<Vec<String> as::ink::storage::traits::AutoStorableHint<::ink\n::storage::traits::ManualKey<805467678u32, ()>,>>::Type"
+                }
+              ]
+            }
+          },
+          "path": [
+            "transactions",
+            "transactions",
+            "Transactions"
+          ]
+        }
+      },
+      {
+        "id": 20,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 12
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 21
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 12
+            },
+            {
+              "name": "E",
+              "type": 21
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 21,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "index": 1,
+                  "name": "CouldNotReadInput"
+                }
+              ]
+            }
+          },
+          "path": [
+            "ink_primitives",
+            "LangError"
+          ]
+        }
+      },
+      {
+        "id": 22,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 23
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 21
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 23
+            },
+            {
+              "name": "E",
+              "type": 21
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 23,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 12
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 24
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 12
+            },
+            {
+              "name": "E",
+              "type": 24
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 24,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "index": 0,
+                  "name": "TransactionDoesNotExist"
+                },
+                {
+                  "index": 1,
+                  "name": "InvalidBuyer"
+                },
+                {
+                  "index": 2,
+                  "name": "InvalidSeller"
+                }
+              ]
+            }
+          },
+          "path": [
+            "transactions",
+            "transactions",
+            "Error"
+          ]
+        }
+      },
+      {
+        "id": 25,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 26
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 21
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 26
+            },
+            {
+              "name": "E",
+              "type": 21
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 26,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "index": 0,
+                  "name": "None"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 7
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Some"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 7
+            }
+          ],
+          "path": [
+            "Option"
+          ]
+        }
+      },
+      {
+        "id": 27,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 2
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 21
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 2
+            },
+            {
+              "name": "E",
+              "type": 21
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 28,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 29
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 21
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 29
+            },
+            {
+              "name": "E",
+              "type": 21
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 29,
+        "type": {
+          "def": {
+            "sequence": {
+              "type": 7
+            }
+          }
+        }
+      },
+      {
+        "id": 30,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 31
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 21
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 31
+            },
+            {
+              "name": "E",
+              "type": 21
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 31,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "index": 0,
+                  "name": "None"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 15
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Some"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 15
+            }
+          ],
+          "path": [
+            "Option"
+          ]
+        }
+      },
+      {
+        "id": 32,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 33
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 21
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 33
+            },
+            {
+              "name": "E",
+              "type": 21
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 33,
+        "type": {
+          "def": {
+            "sequence": {
+              "type": 15
+            }
+          }
+        }
+      },
+      {
+        "id": 34,
+        "type": {
+          "def": {
+            "primitive": "u128"
+          }
+        }
+      },
+      {
+        "id": 35,
+        "type": {
+          "def": {
+            "composite": {
+              "fields": [
+                {
+                  "type": 4,
+                  "typeName": "[u8; 32]"
+                }
+              ]
+            }
+          },
+          "path": [
+            "ink_primitives",
+            "types",
+            "Hash"
+          ]
+        }
+      },
+      {
+        "id": 36,
+        "type": {
+          "def": {
+            "variant": {}
+          },
+          "path": [
+            "ink_env",
+            "types",
+            "NoChainExtension"
+          ]
+        }
+      }
+    ],
+    "version": "4"
+  }

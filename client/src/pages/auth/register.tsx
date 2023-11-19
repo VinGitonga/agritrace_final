@@ -48,7 +48,7 @@ const Register = () => {
 		register,
 		control,
 		reset,
-	} = useForm();
+	} = formMethods;
 
 	const onSubmit = async (data: RegisterFormValues) => {
 		// check if the email is valid

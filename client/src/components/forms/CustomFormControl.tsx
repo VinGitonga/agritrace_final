@@ -3,8 +3,10 @@ import { FormControl, FormField, FormItem, FormLabel } from "../ui/form";
 import { Input } from "../ui/input";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { useCallback } from "react";
+import { Select, SelectItem, SelectTrigger } from "../ui/select";
+import { SelectContent, SelectValue } from "@radix-ui/react-select";
 
-interface IOption {
+export interface IOption {
 	label: string;
 	value?: string | number;
 }
@@ -41,10 +43,27 @@ const CustomFormControl = ({ label, name, description, register, error, control,
 			render={({ field }) => (
 				<FormItem>
 					<FormLabel>{label}</FormLabel>
-					<FormControl>
-						{variant === "input" && <Input {...register(name, { required: isRequired ? errorMessage : false })} placeholder={placeholder} />}
-						
-					</FormControl>
+					{variant === "input" && (
+						<FormControl>
+							<Input {...field} placeholder={placeholder} />
+						</FormControl>
+					)}
+					{variant === "select" && (
+						<FormControl>
+							<Select onValueChange={field.onChange} value={field.value}>
+								<SelectTrigger>
+									<SelectValue placeholder={placeholder ? placeholder : "Select an option"} />
+								</SelectTrigger>
+								<SelectContent>
+									{options?.map((item, index) => (
+										<SelectItem key={index} value={getOptionItem(item).value as string}>
+											{getOptionItem(item).label}ƒ
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
+						</FormControl>
+					)}
 					{description && <p className="text-sm text-gray-400">{description}</p>}
 					{error && <p className="text-sm text-red-500">{error.message as string}</p>}
 				</FormItem>

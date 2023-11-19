@@ -5,3 +5,11 @@ export interface RegisterFormValues {
     location: string;
     role: string;
 }
+
+export interface RawMaterialFormValues {
+    name: string;
+    quantity: string;
+    unit: string;
+    code: string;
+    buyer: string;
+}

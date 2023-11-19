@@ -35,7 +35,7 @@ const AddProduct: NextPageWithLayout = () => {
 		setValue,
 		register,
 		control,
-	} = useForm();
+	} = formMethods;
 
 	const onCodeGenerate = () => {
 		let val = generateNumbers(8);
