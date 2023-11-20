@@ -1,20 +1,20 @@
-import ManufacturerLayout from "@/layouts/ManufacturerLayout";
+import Web3TransBtn from "@/components/btn/Web3TransBtn";
+import CustomTable from "@/components/tabler/CustomTable";
+import { Badge } from "@/components/ui/badge";
+import { contractTxWithToast } from "@/components/web3/contractTxWithToast";
+import useInterval from "@/hooks/useInterval";
+import useTransactions from "@/hooks/useTransactions";
+import DistributorLayout from "@/layouts/DistributorLayout";
+import { IContractType } from "@/types/Contracts";
 import { NextPageWithLayout } from "@/types/Layout";
+import { IProductTransaction, TransactionStatus } from "@/types/Transaction";
+import { truncateHash } from "@/utils";
+import { useInkathon, useRegisteredContract } from "@scio-labs/use-inkathon";
 import { ColumnDef } from "@tanstack/react-table";
 import TimeAgo from "javascript-time-ago";
-import en from "javascript-time-ago/locale/en";
+import en from "javascript-time-ago/locale/en.json";
 import { useState } from "react";
-import CustomTable from "@/components/tabler/CustomTable";
-import useInterval from "@/hooks/useInterval";
-import { truncateHash } from "@/utils";
-import { IEntityTransaction, TransactionStatus } from "@/types/Transaction";
-import useTransactions from "@/hooks/useTransactions";
-import { Badge } from "@/components/ui/badge";
-import Web3TransBtn from "@/components/btn/Web3TransBtn";
-import { useInkathon, useRegisteredContract } from "@scio-labs/use-inkathon";
-import { IContractType } from "@/types/Contracts";
 import toast from "react-hot-toast";
-import { contractTxWithToast } from "@/components/web3/contractTxWithToast";
 
 TimeAgo.addLocale(en);
 
@@ -27,21 +27,21 @@ const preprocessTimeStamp = (timestamp: string) => {
 	return timeAgo.format(newDate);
 };
 
-const IncomingShipments: NextPageWithLayout = () => {
-	const [shipments, setShipments] = useState<IEntityTransaction[]>([]);
+const Incoming: NextPageWithLayout = () => {
+	const [shipments, setShipments] = useState<IProductTransaction[]>([]);
 
-	const { getRawEntitiesPurchaseTransactionsByBuyer } = useTransactions();
 	const { activeAccount, activeSigner, api } = useInkathon();
 	const { contract } = useRegisteredContract(IContractType.TRANSACTIONS);
+	const { getProductPurchaseTransactionsByBuyer } = useTransactions();
 
 	const fetchIncomingShipments = async () => {
-		const items = await getRawEntitiesPurchaseTransactionsByBuyer();
+		const items = await getProductPurchaseTransactionsByBuyer();
 		if (items) {
 			setShipments(items);
 		}
 	};
 
-	const actionOnEntity = async (entityCode: string, actionVariant: "purchase" | "reject") => {
+	const actionOnProductEntity = async (productCode: string, actionVariant: "purchase" | "reject") => {
 		if (!activeAccount || !activeSigner || !api || !contract) {
 			toast.error("Please connect your wallet");
 			return;
@@ -49,18 +49,18 @@ const IncomingShipments: NextPageWithLayout = () => {
 
 		try {
 			api.setSigner(activeSigner);
-			await contractTxWithToast(api, activeAccount?.address, contract, actionVariant === "purchase" ? "purchaseEntity" : "rejectEntityPurchase", {}, [entityCode]);
+			await contractTxWithToast(api, activeAccount?.address, contract, actionVariant === "purchase" ? "purchaseProduct" : "rejectProductPurchase", {}, [productCode]);
 		} catch (err) {
 			console.log(err);
 			toast.error("Something went wrong");
 		}
 	};
 
-	const columns: ColumnDef<IEntityTransaction>[] = [
+	const columns: ColumnDef<IProductTransaction>[] = [
 		{
-			accessorKey: "entityCode",
+			accessorKey: "productCode",
 			header: "Entity Code",
-			cell: ({ row }) => <div>{row.getValue("entityCode")}</div>,
+			cell: ({ row }) => <div>{row.getValue("productCode")}</div>,
 		},
 		{
 			accessorKey: "quantity",
@@ -98,19 +98,18 @@ const IncomingShipments: NextPageWithLayout = () => {
 			cell: ({ row }) => (
 				<div className="space-x-2">
 					{row.original?.status === TransactionStatus.Completed && <Badge color="green">Completed</Badge>}
-					{row.original?.status === TransactionStatus.Initiated && <Web3TransBtn text="Accept" onClick={() => actionOnEntity(row.original?.entityCode, "purchase")} />}
+					{row.original?.status === TransactionStatus.Initiated && <Web3TransBtn text="Accept" onClick={() => actionOnProductEntity(row.original?.productCode, "purchase")} />}
 					{row.original?.status === TransactionStatus.InProgress && <Badge>In Progress</Badge>}
-					{row.original?.status === TransactionStatus.Initiated && <Web3TransBtn text="Reject" onClick={() => actionOnEntity(row.original?.entityCode, "reject")} variant="destructive" />}
+					{row.original?.status === TransactionStatus.Initiated && <Web3TransBtn text="Reject" onClick={() => actionOnProductEntity(row.original?.productCode, "reject")} variant="destructive" />}
 				</div>
 			),
 		},
 	];
 
 	useInterval(fetchIncomingShipments, 5000);
-
-	return <CustomTable<IEntityTransaction> data={shipments} columns={columns} searchField="entityCode" />;
+	return <CustomTable<IProductTransaction> data={shipments} columns={columns} searchField="productCode" />;
 };
 
-IncomingShipments.getLayout = (page) => <ManufacturerLayout>{page}</ManufacturerLayout>;
+Incoming.getLayout = (c) => <DistributorLayout>{c}</DistributorLayout>;
 
-export default IncomingShipments;
+export default Incoming;

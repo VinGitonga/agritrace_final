@@ -9,7 +9,10 @@ export const contractTxWithToast = async (...contractTxParams: ContractTxWithToa
 	return toast.promise(contractTx(...contractTxParams), {
 		loading: "Sending transaction...",
 		success: (result) => <ContractTxSuccessToast {...result} />,
-		error: (err) => <ContractTxErrorToast {...err} />,
+		error: (err) => {
+			console.log(err);
+			return <ContractTxErrorToast {...err} />;
+		},
 	});
 };
 

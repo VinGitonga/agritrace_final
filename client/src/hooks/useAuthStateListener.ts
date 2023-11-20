@@ -31,7 +31,8 @@ const useAuthStateListener = () => {
 					setAccount(output);
 					setHasAccount(true);
 				} else {
-					throw new Error(decodedOutput);
+					console.error(decodedOutput);
+					// throw new Error(decodedOutput);
 				}
 			}
 		}

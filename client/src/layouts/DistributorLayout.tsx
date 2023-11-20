@@ -10,14 +10,9 @@ interface IProps {
 	children: ReactNode | ReactNode[];
 }
 
-const navItems = [
-	<NavItem href="manufacturer/incoming" text="Incoming Shipments" key={"incoming"} />,
-	<NavItem href="manufacturer/add-product" text="Add Product" key={"add-product"} />,
-	<NavItem href="manufacturer/my-products" text="My Products" key={"my-products"} />,
-	<NavItem href="manufacturer/outgoing" text="Outgoing Shipments" key={"outgoing"} />,
-];
+const navItems = [<NavItem href="distributor/incoming" text="Incoming Shipments" key={"incoming"} />];
 
-const ManufacturerLayout = ({ children }: IProps) => {
+const DistributorLayout = ({ children }: IProps) => {
 	return (
 		<div className="flex flex-col min-h-screen">
 			<div className="border-b">
@@ -36,4 +31,4 @@ const ManufacturerLayout = ({ children }: IProps) => {
 	);
 };
 
-export default ManufacturerLayout;
+export default DistributorLayout;

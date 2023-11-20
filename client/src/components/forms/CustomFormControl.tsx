@@ -1,10 +1,12 @@
-import { FieldError, FieldErrorsImpl, Merge, UseFormRegister } from "react-hook-form";
+import { Controller, FieldError, FieldErrorsImpl, Merge, UseFormRegister } from "react-hook-form";
 import { FormControl, FormField, FormItem, FormLabel } from "../ui/form";
 import { Input } from "../ui/input";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { useCallback } from "react";
-import { Select, SelectItem, SelectTrigger } from "../ui/select";
-import { SelectContent, SelectValue } from "@radix-ui/react-select";
+import { Select as ShadSelect, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
+
+const animatedComponents = makeAnimated();
 
 export interface IOption {
 	label: string;
@@ -16,10 +18,10 @@ interface IProps {
 	name: string;
 	description?: string;
 	register?: UseFormRegister<any>;
-	variant?: "input" | "textarea" | "radio" | "select";
+	variant?: "input" | "textarea" | "radio" | "select" | "multi-select";
 	isRequired?: boolean;
 	placeholder?: string;
-	error?: FieldError | Merge<FieldError, FieldErrorsImpl<any>>;
+	error?: FieldError | Merge<FieldError, FieldErrorsImpl<any>> | Merge<FieldError, FieldError[]>;
 	control?: any;
 	errorMessage?: string;
 	pattern?: RegExp;
@@ -36,6 +38,8 @@ const CustomFormControl = ({ label, name, description, register, error, control,
 		return { value: v, label: l };
 	}, []);
 
+	console.log(error);
+
 	return (
 		<FormField
 			name={name}
@@ -50,7 +54,7 @@ const CustomFormControl = ({ label, name, description, register, error, control,
 					)}
 					{variant === "select" && (
 						<FormControl>
-							<Select onValueChange={field.onChange} value={field.value}>
+							<ShadSelect onValueChange={field.onChange} value={field.value}>
 								<SelectTrigger>
 									<SelectValue placeholder={placeholder ? placeholder : "Select an option"} />
 								</SelectTrigger>
@@ -61,7 +65,34 @@ const CustomFormControl = ({ label, name, description, register, error, control,
 										</SelectItem>
 									))}
 								</SelectContent>
-							</Select>
+							</ShadSelect>
+						</FormControl>
+					)}
+					{variant === "multi-select" && (
+						<FormControl>
+							<Controller
+								{...field}
+								name={name}
+								render={(renderProps) => {
+									return (
+										<Select
+											isMulti
+											options={options}
+											className="basic-multi-select"
+											classNamePrefix="select"
+											components={animatedComponents}
+											onChange={(val) => {
+												// @ts-expect-error
+												let newVal = Array.from(val as any).map((item) => item?.value);
+												renderProps.field.onChange(newVal);
+											}}
+											placeholder={placeholder ? placeholder : "Select an option"}
+											{...register(name)}
+											{...renderProps.field}
+										/>
+									);
+								}}
+							/>
 						</FormControl>
 					)}
 					{description && <p className="text-sm text-gray-400">{description}</p>}

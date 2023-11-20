@@ -1,5 +1,6 @@
 import AppProviders from "@/providers/AppProviders";
 import "@/styles/globals.css";
+import "react-vertical-timeline-component/style.min.css";
 import { AppPropsWithLayout } from "@/types/Layout";
 import Head from "next/head";
 import { Toaster } from "react-hot-toast";

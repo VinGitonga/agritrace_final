@@ -8,3 +8,14 @@ export interface IRawEntity {
 	owner: string;
 	buyer: string;
 }
+
+export interface IProductEntity {
+	name: string;
+	code: string;
+	quantity: number;
+	unit: string;
+	batchNo: string;
+	timestamp: number;
+	owner: string;
+	rawEntities: (number | string)[];
+}

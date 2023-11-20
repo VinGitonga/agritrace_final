@@ -6,7 +6,7 @@ const useAccounts = () => {
 	const { api, activeAccount } = useInkathon();
 	const { contract } = useRegisteredContract(IContractType.StakeholderRegistry);
 
-	const getAccounts = async (role?: AccountRole) => {
+	const getAccounts = async (role?: AccountRole): Promise<IAccount[]> => {
 		if (contract! && api! && activeAccount!) {
 			const result = await contractQuery(api, activeAccount?.address, contract, "getAllAccounts");
 
@@ -20,6 +20,7 @@ const useAccounts = () => {
 				return output as IAccount[];
 			} else {
 				console.error(decodedOutput);
+				return [] as IAccount[];
 			}
 		}
 

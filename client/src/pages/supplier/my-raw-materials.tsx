@@ -1,18 +1,52 @@
-import { Checkbox } from "@/components/ui/checkbox";
 import SupplierLayout from "@/layouts/SupplierLayout";
 import { NextPageWithLayout } from "@/types/Layout";
 import { ColumnDef } from "@tanstack/react-table";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { MoreHorizontal } from "lucide-react";
 import CustomTable from "@/components/tabler/CustomTable";
 import useEntity from "@/hooks/useEntity";
 import { useState } from "react";
 import { IRawEntity } from "@/types/Entity";
 import useInterval from "@/hooks/useInterval";
-import { truncateHash } from "@/utils";
+import { checkRawMaterialInTransactions, truncateHash } from "@/utils";
+import useTransactions from "@/hooks/useTransactions";
+import Web3TransBtn from "@/components/btn/Web3TransBtn";
+import { useInkathon, useRegisteredContract } from "@scio-labs/use-inkathon";
+import { IContractType } from "@/types/Contracts";
+import toast from "react-hot-toast";
+import { contractTxWithToast } from "@/components/web3/contractTxWithToast";
+import { IEntityTransaction } from "@/types/Transaction";
 
 const MyRawMaterials: NextPageWithLayout = () => {
+	const { activeAccount, activeSigner, api } = useInkathon();
+	const { contract } = useRegisteredContract(IContractType.TRANSACTIONS);
+	const { getRawEntityTransactions } = useTransactions();
+	const [rawEntityTransactions, setRawEntityTransactions] = useState<IEntityTransaction[]>([]);
+
+	const fetchMyRawEntityTransactions = async () => {
+		const items = await getRawEntityTransactions();
+		if (items) {
+			setRawEntityTransactions(items);
+		}
+	};
+
+	const initiateSellRawEntity = async (row: IRawEntity) => {
+		if (!activeAccount || !activeSigner || !api || !contract) {
+			toast.error("Please connect your wallet");
+			return;
+		}
+
+		let batchNo = row?.batchNo;
+		let batchNoAsNumber = parseInt(batchNo.replace(/,/g, ""));
+		let quantity = parseInt(String(row?.quantity).replace(/,/g, ""));
+
+		try {
+			api.setSigner(activeSigner);
+			await contractTxWithToast(api, activeAccount?.address, contract, "initiateSellEntity", {}, [row?.code, quantity, row?.unit, batchNoAsNumber, row?.buyer]);
+		} catch (err) {
+			console.log(err);
+			toast.error("Something went wrong");
+		}
+	};
+
 	const columns: ColumnDef<IRawEntity>[] = [
 		{
 			accessorKey: "code",
@@ -37,20 +71,14 @@ const MyRawMaterials: NextPageWithLayout = () => {
 		{
 			id: "actions",
 			enableHiding: false,
-			cell: ({ row: _ }) => (
-				<DropdownMenu>
-					<DropdownMenuTrigger asChild>
-						<Button variant="ghost" className="h-8 w-8 p-0">
-							<span className="sr-only">Open options</span>
-							<MoreHorizontal className="h-4 w-4" />
-						</Button>
-					</DropdownMenuTrigger>
-					<DropdownMenuContent align="end">
-						<DropdownMenuItem>View</DropdownMenuItem>
-						<DropdownMenuItem>Edit</DropdownMenuItem>
-						<DropdownMenuItem>Delete</DropdownMenuItem>
-					</DropdownMenuContent>
-				</DropdownMenu>
+			header: "Actions",
+			cell: ({ row }) => (
+				<Web3TransBtn
+					text={checkRawMaterialInTransactions(rawEntityTransactions, row?.original?.batchNo) ? "Sold" : "Sell"}
+					item={row.original}
+					isDisabled={checkRawMaterialInTransactions(rawEntityTransactions, row?.original?.batchNo)}
+					onClick={() => initiateSellRawEntity(row.original)}
+				/>
 			),
 		},
 	];
@@ -63,7 +91,13 @@ const MyRawMaterials: NextPageWithLayout = () => {
 		}
 	};
 
-	useInterval(fetchMyRawMaterials, 5000);
+	const fetchAll = async () => {
+		fetchMyRawMaterials();
+		fetchMyRawEntityTransactions();
+	};
+
+	useInterval(fetchAll, 5000);
+
 
 	return <CustomTable<IRawEntity> data={rawEntities} columns={columns} searchField="code" />;
 };
