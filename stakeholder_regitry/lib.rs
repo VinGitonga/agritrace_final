@@ -78,10 +78,6 @@ mod stakeholder_regitry {
             }
         }
 
-        pub fn default() -> Self {
-            Self::new()
-        }
-
         #[ink(message)]
         pub fn add_account(
             &mut self,
@@ -188,6 +184,8 @@ mod stakeholder_regitry {
         #[ink::test]
         fn get_account() {
             let mut stakeholder_regitry = StakeholderRegitry::new();
+            let acc = AccountId::from([0x0; 32]);
+            ink::env::test::set_caller::<ink::env::DefaultEnvironment>(acc);
             let name = "Proximity Supplies".to_string();
             let phone_no = "0700123456".to_string();
             let location = "Kilifi".to_string();
