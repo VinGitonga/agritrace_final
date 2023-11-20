@@ -1,0 +1,16 @@
+# Development Of AgriTrace
+
+In this section we're going to discuss the development of AgriTrace. We'll discuss the technologies used, the architecture of the application, and the development process.
+
+## Technologies Used
+
+AgriTrace is built as a web based blockchain application. The frontend is built using React. The blockchain is built using Substrate Framework, and the smart contracts are written in Rust. The application is deployed using Aleph Zero testnet parachain and the smart contracts are deployed using the Aleph Zero smart contract pallet.
+
+## Architecture
+
+The application is composed of frontend and blockchain parts only.
+
+- The frontend is built using Next JS and React. It is a web based application that communicates with the blockchain using the Polkadot JS API.
+- The blockchain is built using Substrate Framework. It is a blockchain that is deployed on the Aleph Zero testnet parachain. It is composed of the following pallets:
+  - The Aleph Zero smart contract pallet: This pallet is used to deploy smart contracts on the blockchain.
+  - The AgriTrace pallet: This pallet is used to store the data of the application on the blockchain.

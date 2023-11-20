@@ -1,0 +1,89 @@
+# Configuration of Environment
+
+AgriTrace Smart Contracts are developed using ink! eDSL for Rust.
+
+Make sure you've installed the prerequisites as described from the previous section.
+
+Refer also to the [ink! documentation](https://use.ink/) for more information.
+
+## Configure Rust for Smart Contracts
+
+### Install the Rust Nightly Compiler
+
+- ink! requires the Rust nightly compiler. Install it using [rustup](https://rustup.rs/):
+
+```bash
+rustup install nightly
+```
+
+### Set the Nightly Compiler as Default
+
+- Set the nightly compiler as default:
+
+```bash
+rustup default nightly
+```
+
+### Add WebAssembly (Wasm) Target
+
+- ink! compiles smart contracts to Wasm. Add the Wasm target to your toolchain:
+
+```bash
+rustup target add wasm32-unknown-unknown --toolchain nightly
+```
+
+### Install the cargo-contract Utility
+
+- ink! provides a utility to compile, test, and deploy smart contracts. Install it using cargo:
+
+- install rust-src component
+
+```bash
+rustup component add rust-src --toolchain nightly
+```
+
+- install cargo-contract
+
+```bash
+cargo install --force --locked cargo-contract
+```
+
+- install dylant for linting (Optional)
+
+  - MacOS
+
+    ```bash
+      brew install openssl
+    ```
+
+  - Then
+
+        ```bash
+            cargo install cargo-dylint dylint-link
+        ```
+
+### Install the Substrate Node Template (Optional)
+
+- The Substrate Node Template is a Substrate node that is configured with the necessary pallets to deploy and interact with ink! smart contracts. It is not required to develop smart contracts, but it is useful for testing and debugging.
+
+- There are two ways to install the Substrate Node Template:
+
+  - Install the Substrate Node Template by download the binary
+
+    - Download the latest release of the Substrate Node Template from the [releases page](https://github.com/paritytech/substrate-contracts-node/releases).
+
+  - Install the Substrate Node Template by building from source using cargo:
+
+      ```bash
+      cargo install contracts-node
+      ```
+
+      This method is takes a while to build the node.
+
+### Install the Polkadot Extension
+
+- The Polkadot extension allows you to interact with the Substrate node. You can install it from the [Chrome Web Store](https://chrome.google.com/webstore/detail/polkadotjs-extension/mopnmbcafieddcagagdcbnhejhlodfdd) or [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/polkadot-js-extension/).
+
+
+After completing these steps, your environment should be set up for developing ink! smart contracts
+

@@ -1,0 +1,85 @@
+# Design of Smart Contracts
+
+## Introduction
+
+In this section we're going to discuss how we've designed our smart contracts. We'll start with a high level overview of the contracts and then dive into the details of each contract.
+
+## High Level Overview
+
+The smart contracts are designed to be as simple as possible. We've tried to keep the contracts as simple as possible to reduce the risk of bugs and to make it easier for others to audit the contracts. The contracts are designed to be as modular as possible. This allows us to upgrade the contracts in the future if we need to. The contracts are also designed to be as gas efficient as possible. This is important because it reduces the cost of using the contracts.
+
+### Contracts
+
+AgriTrace smart contracts are split into three main contracts:
+
+- StakeholderRegistry
+- EntityRegistry
+- Traceability (Transactions)
+
+#### Brief Description of Contracts
+
+##### StakeholderRegistry
+
+This contract is used to register stakeholders. It is also used to manage the permissions of stakeholders. Stakeholders can be added and updated. Stakeholders can also be assigned permissions.
+
+It has four main sections:
+
+- Error Handling: This covers the enum describing the errors that can occur in the contract.
+
+- Role Management: This covers the enum describing the roles that can be assigned to stakeholders. It also covers the functions for assigning and removing roles from stakeholders.
+
+  - There are mainly 6 roles
+    - Admin
+    - Supplier
+    - Manufacturer
+    - Distributor
+    - Retailer
+    - Other
+
+- Stakeholder Management: This covers the struct describing the stakeholders. It also covers the functions for adding and updating stakeholders.
+
+  - The stakeholders are identified by their Polkadot address.
+
+- Tests: This covers the tests for the contract.
+  - Unit tests cover the stakeholder management functions.
+
+###### Snippets
+
+```rust
+// Error Handling
+ pub enum Error {
+    AccountAlreadyExists,
+}
+```
+
+```rust
+// Role Management
+pub enum Role {
+    Admin,
+    Supplier,
+    Manufacturer,
+    Distributor,
+    Retailer,
+    Other,
+}
+```
+
+```rust
+// Stakeholder Management
+pub struct Account {
+    name: String,
+    phone_no: String,
+    location: String,
+    products: Vec<String>,
+    address: AccountId,
+    timestamp: Timestamp,
+    role: Role,
+}
+```
+
+For more details, please refer to the [StakeholderRegistry](https://github.com/VinGitonga/agritrace_final/blob/861dd55f42c30bac0904929408cb1a801ba542e1/stakeholder_regitry/lib.rs)
+
+##### EntityRegistry
+
+This contract is used to register entities. Entities can be added and updated.
+
