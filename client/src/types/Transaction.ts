@@ -24,7 +24,7 @@ export interface IProductTransaction {
 	productCode: string;
 	quantity: number | string;
 	quantityUnit: string;
-	batchNo: string;
+	batchNo: string | string[];
 	buyer: string;
 	seller: string;
 	status: TransactionStatus;

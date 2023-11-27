@@ -1,6 +1,8 @@
 import ConnectBtn from "@/components/web3/ConnectBtn";
 import useAuth from "@/hooks/store/useAuth";
 import useDidHydrate from "@/hooks/useDidHydrate";
+import { SearchCheck } from "lucide-react";
+import Link from "next/link";
 import { useMemo } from "react";
 import { IoIosFlash } from "react-icons/io";
 
@@ -33,6 +35,12 @@ const Home = () => {
 						<IoIosFlash className="w-5 h-5 mx-2" />
 						<span className="mx-2">{account ? "Dashboard" : "Get Started"}</span>
 					</a>
+					<Link href="/trace-info">
+						<div className="inline-flex items-center justify-center w-full px-4 py-2.5 overflow-hidden text-sm text-gray-900 transition-colors duration-300 bg-white rounded-lg shadow sm:w-auto sm:mx-2 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 focus:ring focus:ring-gray-300 focus:ring-opacity-80">
+							<SearchCheck className="w-5 h-5 mx-2" />
+							<span className="mx-2">Trace a Product Journey</span>
+						</div>
+					</Link>
 				</div>
 			</div>
 		</section>

@@ -57,9 +57,9 @@ const useEntity = () => {
 	const getProductEntity = useCallback(
 		async (productCode: string) => {
 			if (contract && api && activeAccount) {
-				const result = await contractQuery(api, activeAccount?.address, contract, "getProductEntity", {}, [productCode]);
+				const result = await contractQuery(api, activeAccount?.address, contract, "getProductEntityByCode", {}, [productCode]);
 
-				const { output, isError, decodedOutput } = decodeOutput(result, contract, "getProductEntity");
+				const { output, isError, decodedOutput } = decodeOutput(result, contract, "getProductEntityByCode");
 
 				if (!isError && output) {
 					return output as IProductEntity;

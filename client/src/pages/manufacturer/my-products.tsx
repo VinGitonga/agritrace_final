@@ -1,10 +1,11 @@
 import SaleProductModal from "@/components/modals/SaleProductModal";
 import CustomTable from "@/components/tabler/CustomTable";
-import { Button } from "@/components/ui/button";
+import useAccounts from "@/hooks/useAccounts";
 import useEntity from "@/hooks/useEntity";
 import useInterval from "@/hooks/useInterval";
 import useTransactions from "@/hooks/useTransactions";
 import ManufacturerLayout from "@/layouts/ManufacturerLayout";
+import { IAccount } from "@/types/Account";
 import { IProductEntity } from "@/types/Entity";
 import { NextPageWithLayout } from "@/types/Layout";
 import { IProductTransaction } from "@/types/Transaction";
@@ -15,11 +16,13 @@ import { useState } from "react";
 const MyProducts: NextPageWithLayout = () => {
 	const { getMyProductEntities } = useEntity();
 	const { getProductPurchaseTransactions } = useTransactions();
+	const { getAccounts } = useAccounts();
 
 	const [myProducts, setMyProducts] = useState<IProductEntity[]>([]);
 	const [productPurchases, setProductPurchases] = useState<IProductTransaction[]>([]);
 	const [productToSell, setProductToSell] = useState<IProductEntity | null>(null);
 	const [openModal, setOpenModal] = useState<boolean>(false);
+	const [accounts, setAccounts] = useState<IAccount[]>([]);
 
 	const fetchMyProducts = async () => {
 		const items = await getMyProductEntities();
@@ -35,9 +38,18 @@ const MyProducts: NextPageWithLayout = () => {
 		}
 	};
 
+	const fetchDistributorAccounts = async () => {
+		const accs = await getAccounts();
+
+		if (accs) {
+			setAccounts(accs);
+		}
+	};
+
 	const fetchAll = async () => {
 		fetchMyProducts();
 		fetchProductPurchases();
+		fetchDistributorAccounts();
 	};
 
 	const toggleOpenModal = (product: IProductEntity) => {
@@ -90,13 +102,15 @@ const MyProducts: NextPageWithLayout = () => {
 						open={openModal}
 						setOpen={setOpenModal}
 						product={productToSell}
+						accounts={accounts}
 					/>
 				</>
 			),
 		},
 	];
 
-	useInterval(fetchAll, 5000);
+	// we need to pause the interval when the modal is open
+	useInterval(fetchAll, openModal ? null : 5000);
 
 	return (
 		<>

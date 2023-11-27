@@ -7,8 +7,22 @@ import useTransactions from "@/hooks/useTransactions";
 import ManufacturerLayout from "@/layouts/ManufacturerLayout";
 import { NextPageWithLayout } from "@/types/Layout";
 import { IProductTransaction } from "@/types/Transaction";
+import { convertFixU64ToNum, truncateHash } from "@/utils";
 import { ColumnDef } from "@tanstack/react-table";
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en.json";
 import { useState } from "react";
+
+TimeAgo.addLocale(en);
+
+const timeAgo = new TimeAgo("en-US");
+
+const preprocessTimeStamp = (timestamp: string) => {
+	const newIntTimestamp = parseInt(timestamp.replace(/,/g, ""));
+	const newDate = new Date(newIntTimestamp);
+
+	return timeAgo.format(newDate);
+};
 
 const OutgoingShipments: NextPageWithLayout = () => {
 	const [shipments, setShipments] = useState<IProductTransaction[]>([]);
@@ -56,12 +70,12 @@ const OutgoingShipments: NextPageWithLayout = () => {
 		{
 			accessorKey: "updatedAt",
 			header: "Updated At",
-			cell: ({ row }) => <div>{row.getValue("updatedAt")}</div>,
+			cell: ({ row }) => <div>{row.original.updatedAt ? preprocessTimeStamp(row.original.updatedAt) : "N/A"}</div>,
 		},
 		{
 			accessorKey: "buyer",
 			header: "Buyer",
-			cell: ({ row }) => <div>{row.getValue("buyer")}</div>,
+			cell: ({ row }) => <div>{truncateHash(row?.original?.buyer)}</div>,
 		},
 		{
 			id: "actions",

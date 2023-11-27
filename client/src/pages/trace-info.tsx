@@ -1,3 +1,4 @@
+import ScanQRCode from "@/components/modals/ScanQRCode";
 import Results from "@/components/trace/Results";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,6 +13,7 @@ import { IBackTrace, IStakeholder } from "@/types/Transaction";
 import { consolidateBackTrace } from "@/utils";
 import { useInkathon, useRegisteredContract } from "@scio-labs/use-inkathon";
 import { Loader2 } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
@@ -20,6 +22,8 @@ const TraceInfo = () => {
 	const [rawEntities, setRawEntities] = useState<IRawEntity[]>();
 	const [product, setProduct] = useState<IProductEntity>();
 	const [stakeholderInfo, setStakeholderInfo] = useState<IStakeholder>();
+	const [openQRCodeReader, setOpenQRCodeReader] = useState<boolean>(false);
+	const [qrCodeUrl, setQrCodeUrl] = useState<string>("");
 
 	const { api, activeAccount } = useInkathon();
 	const { contract } = useRegisteredContract(IContractType.TRANSACTIONS);
@@ -103,18 +107,27 @@ const TraceInfo = () => {
 	return (
 		<div className="max-w-screen-xl mx-auto px-4 py-28 gap-12 text-gray-600 md:px-8">
 			<div className="space-y-5 max-w-4xl mx-auto text-center">
-				<h1 className="text-sm text-indigo-600 font-medium">AgriTrace</h1>
+				<Link href="/">
+					<h1 className="text-2xl text-indigo-600 font-medium">AgriTrace</h1>
+				</Link>
 				<h2 className="text-4xl text-gray-800 font-extrabold mx-auto md:text-5xl">
 					Trace your product with
 					<span className="text-transparent bg-clip-text bg-gradient-to-r from-[#4F46E5] to-[#E114E5]"> AgriTrace</span>
 				</h2>
 				<p className="max-w-2xl mx-auto">Trace your product from the manufacturer to the distributor and the supplier. Get all the information about your product.</p>
 			</div>
-			<div className="flex flex-col items-center justify-center w-full min-h-screen space-y-2">
+			<div className="flex flex-col items-center justify-center my-4 space-y-2">
 				<Label htmlFor="email">Serial No</Label>
-				<Input id="email" type="text" placeholder="Serial No" value={serialNo} onChange={(e) => setSerialNo(e.target.value)} />
+				<Input id="serialNo" type="text" placeholder="Serial No e.g. 48264725676503" value={serialNo} onChange={(e) => setSerialNo(e.target.value)} />
 				<Button onClick={fetchTraceBack}>Trace</Button>
 			</div>
+			<Button
+				onClick={() => {
+					setOpenQRCodeReader(true);
+				}}>
+				Scan QR Code
+			</Button>
+			<ScanQRCode open={openQRCodeReader} onClose={() => setOpenQRCodeReader(false)} setUrl={setQrCodeUrl} />
 			{loading ? (
 				<div className="flex items-center justify-center">
 					<Loader2 className="w-16 h-16 text-indigo-600" />

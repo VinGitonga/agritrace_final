@@ -55,19 +55,29 @@ export const validateProductStatus = (productSale: IProductTransaction[], produc
 	return isValid;
 };
 
+export const convertFixU64ToNum = (str: string) => {
+	const newStr = String(str).replace(/,/g, "");
+	return parseInt(newStr);
+};
+
 export const consolidateBackTrace = (products_transactions: IProductTransaction[], entity_transactions: IEntityTransaction[], product_serial_no: string) => {
 	// fetch product sale item using its serial no
 	const productSaleItem = products_transactions.find((product) => product.serialNo === product_serial_no);
 
 	// get all the batch nos from the product sale
-	const productProductionBatchNos = productSaleItem.batchNo;
+	const productProductionBatchNos = (productSaleItem.batchNo as string[]).map((batchNo) => String(convertFixU64ToNum(batchNo)));
+
+	const entities_batch_nos = entity_transactions.map((entity) => String(convertFixU64ToNum(entity.batchNo)));
 
 	// get all the entities that have the same batch no as the product sale
-	const entities = entity_transactions.filter((entity) => productProductionBatchNos.includes(entity.batchNo));
+	const valid_entities = entities_batch_nos && entities_batch_nos.filter((batchNo) => productProductionBatchNos.includes(batchNo));
+
+	// using valid entities, get the entity transactions
+	const valid_entity_transactions = entity_transactions.filter((entity) => valid_entities.includes(String(convertFixU64ToNum(entity.batchNo))));
 
 	const backtrace: IBackTrace = {
 		productTransaction: productSaleItem,
-		rawEntityTransactions: entities,
+		rawEntityTransactions: valid_entity_transactions,
 	};
 
 	return backtrace;

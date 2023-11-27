@@ -3,7 +3,7 @@ export interface IRawEntity {
 	quantity: number;
 	unit: string;
 	code: string;
-	timestamp: number;
+	timestamp: number | string;
 	batchNo: string;
 	owner: string;
 	buyer: string;

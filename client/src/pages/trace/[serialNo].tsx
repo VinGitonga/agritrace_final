@@ -1,4 +1,5 @@
 import Results from "@/components/trace/Results";
+import ConnectBtn from "@/components/web3/ConnectBtn";
 import useAccounts from "@/hooks/useAccounts";
 import useEntity from "@/hooks/useEntity";
 import useTransactions from "@/hooks/useTransactions";
@@ -41,6 +42,8 @@ const Trace = () => {
 
 			const product_results_transactions = await getProductPurchaseTransactions();
 
+			console.log(product_results_transactions);
+
 			// check if serial number is valid
 			const serialNoExists = product_results_transactions.some((product) => product.serialNo === serialNo);
 
@@ -54,9 +57,13 @@ const Trace = () => {
 			// get all raw entities transactions
 			const raw_entities_transactions = await getRawEntityTransactions();
 
+			console.log(raw_entities_transactions);
+
 			const backTraceResults = consolidateBackTrace(product_results_transactions, raw_entities_transactions, serialNo);
 
 			setBacktrace(backTraceResults);
+
+			console.log(backTraceResults);
 
 			toast.loading("Loading Product 📦 ...", { id });
 
@@ -65,7 +72,11 @@ const Trace = () => {
 
 			setProduct(productEntity);
 
+
+
 			toast.loading("Loading Raw Entities 📦 ...", { id });
+
+			console.log(productEntity);
 
 			// get raw entities by their batch nos but first we've to remove commas from the batch no and return numbers
 			const batchNos = productEntity.rawEntities.map((rawEntity) => parseInt(String(rawEntity).replace(/,/g, "")));
@@ -93,6 +104,7 @@ const Trace = () => {
 
 			setLoading(false);
 		} catch (err) {
+			console.log(err);
 			toast.error("Something went wrong 😢", { id });
 		} finally {
 			setLoading(false);
@@ -110,7 +122,8 @@ const Trace = () => {
 	return (
 		<div className="max-w-screen-xl mx-auto px-4 py-28 gap-12 text-gray-600 md:px-8">
 			<div className="space-y-5 max-w-4xl mx-auto text-center">
-				<h1 className="text-sm text-indigo-600 font-medium">AgriTrace</h1>
+				<ConnectBtn />
+				<h1 className="text-2xl text-indigo-600 font-medium">AgriTrace</h1>
 				<h2 className="text-4xl text-gray-800 font-extrabold mx-auto md:text-5xl">
 					Trace your product with
 					<span className="text-transparent bg-clip-text bg-gradient-to-r from-[#4F46E5] to-[#E114E5]"> AgriTrace</span>
@@ -123,8 +136,8 @@ const Trace = () => {
 				</div>
 			) : (
 				stakeholderInfo && (
-					<div className="space-y-2">
-						<h2 className="text-3xl font-bold">Traceback for: {serialNo}</h2>
+					<div className="space-y-2 my-5">
+						<h2 className="text-3xl font-bold text-center">Traceback for: {serialNo}</h2>
 						<Results backtrace={backtrace} rawEntities={rawEntities} product={product} stakeholderInfo={stakeholderInfo} />
 					</div>
 				)
