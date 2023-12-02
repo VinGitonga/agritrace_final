@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { BASE_CLIENT_URL } from "@/env";
 import html2canvas from "html2canvas";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { QRCode } from "react-qrcode-logo";
@@ -27,7 +28,7 @@ function QrCodeModal({ open, onClose, serialNo }: IProps) {
 
 	useEffect(() => {
 		if (serialNo) {
-			setUrl(`http://localhost:3000/trace/${serialNo}`);
+			setUrl(`${BASE_CLIENT_URL}/trace/${serialNo}`);
 		}
 	}, [serialNo]);
 
