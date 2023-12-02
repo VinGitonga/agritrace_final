@@ -58,7 +58,8 @@ const SaleProductModal = ({ text, open, setOpen, disabled = false, product, onCl
 			api.setSigner(activeSigner);
 			const serialNo = generateNumbers();
 			const rawEntities = product?.rawEntities?.map((raw) => convertFixU64ToNum(raw as string));
-			await contractTxWithToast(api, activeAccount?.address, contract, "sellProduct", {}, [product?.code, product?.quantity, product?.unit, rawEntities, distributor, serialNo]);
+			const prodQuantity = convertFixU64ToNum(String(product?.quantity))
+			await contractTxWithToast(api, activeAccount?.address, contract, "sellProduct", {}, [product?.code, prodQuantity, product?.unit, rawEntities, distributor, serialNo]);
 			toast.success("Product sold successfully");
 			setLoading(false);
 		} catch (err) {
