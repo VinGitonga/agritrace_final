@@ -75,7 +75,7 @@ const Results = ({ stakeholderInfo, backtrace, product, rawEntities }: IProps) =
 				</VerticalTimelineElement>
 				<VerticalTimelineElement
 					className="vertical-timeline-element--education"
-					date={timeAgo.format(new Date(convertFixU64ToNum(backtrace.rawEntityTransactions[0].createdAt) ?? 0), "twitter-now")}
+					date={timeAgo.format(new Date(convertFixU64ToNum(backtrace.rawEntityTransactions[0]?.createdAt) ?? 0), "twitter-now")}
 					iconStyle={{ background: "rgb(233, 30, 99)", color: "#fff" }}
 					icon={<GiCardDraw />}>
 					<h2 className="text-2xl font-bold">Raw Materials Supply Info</h2>
@@ -83,7 +83,7 @@ const Results = ({ stakeholderInfo, backtrace, product, rawEntities }: IProps) =
 					<p className="text-lg font-semibold">Supplier Address : {stakeholderInfo?.supplier?.address}</p>
 					<p className="text-lg font-semibold">
 						Supplier Location : {stakeholderInfo?.supplier?.location}
-						{" : "} {timeAgo.format(new Date(convertFixU64ToNum(backtrace.rawEntityTransactions[0].createdAt) ?? 0), "twitter-now")}
+						{" : "} {timeAgo.format(new Date(convertFixU64ToNum(backtrace.rawEntityTransactions[0]?.createdAt) ?? 0), "twitter-now")}
 					</p>
 				</VerticalTimelineElement>
 				<VerticalTimelineElement
