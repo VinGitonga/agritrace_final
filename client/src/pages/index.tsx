@@ -24,7 +24,7 @@ const Home = () => {
 				<h2 className="text-2xl font-bold tracking-tight text-gray-800 xl:text-3xl dark:text-white">AgriTrace</h2>
 
 				<p className="block max-w-4xl mt-4 text-gray-500 dark:text-gray-300">
-					AgriTrace is a blockchain-based traceability system for agricultural products. It allows users to track the journey of their food from farm to fork.
+					AgriTrace is a blockchain-based traceability system for agricultural products. It allows users to track the journey of their food products journey.
 				</p>
 
 				<div className="mt-6 flex items-center justify-center">
