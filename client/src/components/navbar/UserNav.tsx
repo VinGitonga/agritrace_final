@@ -8,11 +8,12 @@ export default function UserNav() {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button variant="ghost" className="relative h-8 w-8 rounded-full">
-					<Avatar className="w-8 h-8">
+				<Button variant="ghost" className="relative space-x-2">
+					<Avatar className="w-8 h-8 rounded-full">
 						<AvatarImage src="https://avatars.githubusercontent.com/u/139895814?s=280&v=4" alt="User's Avatar" />
 						<AvatarFallback>JD</AvatarFallback>
 					</Avatar>
+					<p className="">{account?.name}</p>
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent className="w-56" align="end" forceMount>
@@ -23,39 +24,6 @@ export default function UserNav() {
 					</div>
 				</DropdownMenuLabel>
 				<DropdownMenuSeparator />
-				<DropdownMenuGroup>
-					<DropdownMenuItem>
-						Profile
-						<DropdownMenuShortcut>
-							<kbd>⌘</kbd>
-							<kbd>P</kbd>
-						</DropdownMenuShortcut>
-					</DropdownMenuItem>
-					<DropdownMenuItem>
-						Billing
-						<DropdownMenuShortcut>
-							<kbd>⌘</kbd>
-							<kbd>B</kbd>
-						</DropdownMenuShortcut>
-					</DropdownMenuItem>
-					<DropdownMenuItem>
-						Settings
-						<DropdownMenuShortcut>
-							<kbd>⌘</kbd>
-							<kbd>S</kbd>
-						</DropdownMenuShortcut>
-					</DropdownMenuItem>
-					<DropdownMenuItem>New Team</DropdownMenuItem>
-				</DropdownMenuGroup>
-				<DropdownMenuSeparator />
-				<DropdownMenuItem>
-					Log out
-					<DropdownMenuShortcut>
-						<kbd>⬆</kbd>
-						<kbd>⌘</kbd>
-						<kbd>Q</kbd>
-					</DropdownMenuShortcut>
-				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);

@@ -1,4 +1,5 @@
 import SaleProductModal from "@/components/modals/SaleProductModal";
+import CustomStack from "@/components/stacks/CustomStack";
 import CustomTable from "@/components/tabler/CustomTable";
 import useAccounts from "@/hooks/useAccounts";
 import useEntity from "@/hooks/useEntity";
@@ -6,23 +7,26 @@ import useInterval from "@/hooks/useInterval";
 import useTransactions from "@/hooks/useTransactions";
 import ManufacturerLayout from "@/layouts/ManufacturerLayout";
 import { IAccount } from "@/types/Account";
-import { IProductEntity } from "@/types/Entity";
+import { IProductEntity, IRawEntity } from "@/types/Entity";
 import { NextPageWithLayout } from "@/types/Layout";
 import { IProductTransaction } from "@/types/Transaction";
-import { validateProductStatus } from "@/utils";
+import { convertFixU64ToNum, mapBatchNoToRawEntity, validateProductStatus } from "@/utils";
+import { useInkathon } from "@scio-labs/use-inkathon";
 import { ColumnDef } from "@tanstack/react-table";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const MyProducts: NextPageWithLayout = () => {
-	const { getMyProductEntities } = useEntity();
+	const { getMyProductEntities, getAllRawEntities } = useEntity();
 	const { getProductPurchaseTransactions } = useTransactions();
 	const { getAccounts } = useAccounts();
+	const { activeAccount } = useInkathon();
 
 	const [myProducts, setMyProducts] = useState<IProductEntity[]>([]);
 	const [productPurchases, setProductPurchases] = useState<IProductTransaction[]>([]);
 	const [productToSell, setProductToSell] = useState<IProductEntity | null>(null);
 	const [openModal, setOpenModal] = useState<boolean>(false);
 	const [accounts, setAccounts] = useState<IAccount[]>([]);
+	const [rawEntities, setRawEntities] = useState<IRawEntity[]>([]);
 
 	const fetchMyProducts = async () => {
 		const items = await getMyProductEntities();
@@ -46,10 +50,18 @@ const MyProducts: NextPageWithLayout = () => {
 		}
 	};
 
+	const fetchRawEntities = async () => {
+		const items = await getAllRawEntities();
+		if (items) {
+			setRawEntities(items);
+		}
+	};
+
 	const fetchAll = async () => {
 		fetchMyProducts();
 		fetchProductPurchases();
 		fetchDistributorAccounts();
+		fetchRawEntities();
 	};
 
 	const toggleOpenModal = (product: IProductEntity) => {
@@ -79,7 +91,12 @@ const MyProducts: NextPageWithLayout = () => {
 			cell: ({ row }) => (
 				<div>
 					{(row.getValue("rawEntities") as string[])?.map((rawMaterial: string) => {
-						return <div>{rawMaterial}</div>;
+						return (
+							<CustomStack>
+								<p className="font-semibold uppercase text-sm">{mapBatchNoToRawEntity(rawEntities, String(convertFixU64ToNum(rawMaterial)))?.name}</p>
+								<p className="text-gray-500 text-xs">{convertFixU64ToNum(rawMaterial)}</p>
+							</CustomStack>
+						);
 					})}
 				</div>
 			),
@@ -87,12 +104,12 @@ const MyProducts: NextPageWithLayout = () => {
 		{
 			accessorKey: "batchNo",
 			header: "Batch No.",
-			cell: ({ row }) => <div>{row.getValue("batchNo")}</div>,
+			cell: ({ row }) => <div>{convertFixU64ToNum(row.getValue("batchNo"))}</div>,
 		},
 		{
 			id: "actions",
 			enableHiding: false,
-			header: "Actions",
+			header: "Actions / Status",
 			cell: ({ row }) => (
 				<>
 					<SaleProductModal
@@ -112,11 +129,11 @@ const MyProducts: NextPageWithLayout = () => {
 	// we need to pause the interval when the modal is open
 	useInterval(fetchAll, openModal ? null : 5000);
 
-	return (
-		<>
-			<CustomTable<IProductEntity> data={myProducts} columns={columns} searchField="code" />
-		</>
-	);
+	useEffect(() => {
+		fetchAll();
+	}, [activeAccount]);
+
+	return <CustomTable<IProductEntity> data={myProducts} columns={columns} searchField="code" searchPlaceholder="Search by Code ..." />;
 };
 
 MyProducts.getLayout = function getLayout(page) {

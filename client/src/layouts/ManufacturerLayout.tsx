@@ -22,11 +22,9 @@ const ManufacturerLayout = ({ children }: IProps) => {
 		<div className="flex flex-col min-h-screen">
 			<div className="border-b">
 				<div className="flex h-16 items-center px-4">
-					<TeamSwitcher />
 					<MainNav navItems={navItems} className="mx-6" />
 					<div className="ml-auto flex items-center space-x-4">
 						<ConnectBtn />
-						<Search />
 						<UserNav />
 					</div>
 				</div>

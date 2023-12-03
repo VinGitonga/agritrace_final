@@ -42,6 +42,10 @@ const ScanQRCode = ({ open, onClose, setUrl }: IProps) => {
 		}
 	}, [videoRef.current]);
 
+	const redirect = useCallback((url: string) => {
+		window.location.href = url;
+	}, []);
+
 	return (
 		<Dialog open={open} onOpenChange={onDismiss}>
 			<DialogContent className="sm:max-w-[425px]" ref={modalRef}>
@@ -59,6 +63,7 @@ const ScanQRCode = ({ open, onClose, setUrl }: IProps) => {
 						onResult={(result) => {
 							if (result) {
 								setUrl(result.getText());
+								redirect(result.getText());
 								onClose();
 							}
 						}}

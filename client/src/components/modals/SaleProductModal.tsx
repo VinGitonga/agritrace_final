@@ -29,7 +29,6 @@ const FormSchema = object({
 });
 
 const SaleProductModal = ({ text, open, setOpen, disabled = false, product, onClickTrigger, accounts }: IProps) => {
-	console.log(product);
 	const formMethods = useForm<{ distributor?: string }>({
 		resolver: yupResolver(FormSchema),
 		defaultValues: {
@@ -58,7 +57,7 @@ const SaleProductModal = ({ text, open, setOpen, disabled = false, product, onCl
 			api.setSigner(activeSigner);
 			const serialNo = generateNumbers();
 			const rawEntities = product?.rawEntities?.map((raw) => convertFixU64ToNum(raw as string));
-			const prodQuantity = convertFixU64ToNum(String(product?.quantity))
+			const prodQuantity = convertFixU64ToNum(String(product?.quantity));
 			await contractTxWithToast(api, activeAccount?.address, contract, "sellProduct", {}, [product?.code, prodQuantity, product?.unit, rawEntities, distributor, serialNo]);
 			toast.success("Product sold successfully");
 			setLoading(false);
@@ -72,12 +71,10 @@ const SaleProductModal = ({ text, open, setOpen, disabled = false, product, onCl
 
 	return (
 		<>
-			<button
-				className={`flex items-center justify-center px-2 py-2 text-sm font-medium text-white bg-green-600 rounded-md ${disabled ? "cursor-not-allowed" : "cursor-pointer"}`}
-				onClick={onClickTrigger}
-				disabled={disabled}>
+			<Button variant="default" className="ml-auto" onClick={onClickTrigger} disabled={disabled}>
 				{text}
-			</button>
+			</Button>
+
 			<Dialog open={open} onOpenChange={setOpen}>
 				<FormProvider {...formMethods}>
 					<DialogContent className="sm:max-w-[425px]">

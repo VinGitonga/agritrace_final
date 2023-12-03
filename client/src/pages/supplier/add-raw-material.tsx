@@ -78,7 +78,7 @@ const AddRawMaterial: NextPageWithLayout = () => {
 			await contractTxWithToast(api, activeAccount?.address, contract, "addRawEntity", {}, [data?.name, Number(data?.quantity) ?? 0, data?.unit, data?.code, batchNo, data?.buyer]);
 			reset();
 			setLoading(false);
-			router.push("/dashboard");
+			router.push("/supplier/my-raw-materials");
 		} catch (err) {
 			console.log(err);
 			setLoading(false);

@@ -6,14 +6,14 @@ import { ChevronDown } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 
-
 type IProps<T extends object> = {
 	columns: ColumnDef<T>[];
 	data: T[];
-    searchField?: string;
-}
+	searchField?: string;
+	searchPlaceholder?: string;
+};
 
-const CustomTable = <T extends object>({ data, columns, searchField }: IProps<T>) => {
+const CustomTable = <T extends object>({ data, columns, searchField, searchPlaceholder = "Search ..." }: IProps<T>) => {
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -41,7 +41,7 @@ const CustomTable = <T extends object>({ data, columns, searchField }: IProps<T>
 		<div className="w-full px-4">
 			<div className="flex item-center py-4">
 				<Input
-					placeholder="Filter products..."
+					placeholder={searchPlaceholder}
 					value={(table.getColumn(searchField)?.getFilterValue() as string) ?? ""}
 					onChange={(event) => table.getColumn(searchField)?.setFilterValue(event.target.value)}
 					className="max-w-sm"
@@ -78,25 +78,28 @@ const CustomTable = <T extends object>({ data, columns, searchField }: IProps<T>
 						))}
 					</TableHeader>
 					<TableBody>
-						{table.getRowModel().rows?.length ? (
-							table.getRowModel().rows.map((row) => (
-								<TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
-									{row.getVisibleCells().map((cell) => (
-										<TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
-									))}
-								</TableRow>
-							))
-						) : (
-							<TableRow>
-								<TableCell colSpan={columns.length} className="h-24 text-center">
-									No results.
-								</TableCell>
-							</TableRow>
+						{table?.getRowModel()?.rows && (
+							<>
+								{table.getRowModel().rows?.length ? (
+									table.getRowModel().rows.map((row) => (
+										<TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+											{row.getVisibleCells().map((cell) => (
+												<TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+											))}
+										</TableRow>
+									))
+								) : (
+									<TableRow>
+										<TableCell colSpan={columns.length} className="h-24 text-center">
+											No results.
+										</TableCell>
+									</TableRow>
+								)}
+							</>
 						)}
 					</TableBody>
 				</Table>
 			</div>
-
 		</div>
 	);
 };

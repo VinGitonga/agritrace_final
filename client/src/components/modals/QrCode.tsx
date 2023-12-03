@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { BASE_CLIENT_URL } from "@/env";
+import { AGRITRACE_BASE_URL, BASE_CLIENT_URL } from "@/env";
 import html2canvas from "html2canvas";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { QRCode } from "react-qrcode-logo";
@@ -28,7 +28,7 @@ function QrCodeModal({ open, onClose, serialNo }: IProps) {
 
 	useEffect(() => {
 		if (serialNo) {
-			setUrl(`${BASE_CLIENT_URL}/trace/${serialNo}`);
+			setUrl(`${AGRITRACE_BASE_URL}/trace/${serialNo}`);
 		}
 	}, [serialNo]);
 

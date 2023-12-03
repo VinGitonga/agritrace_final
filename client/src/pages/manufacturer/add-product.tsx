@@ -16,6 +16,7 @@ import toast from "react-hot-toast";
 import useEntity from "@/hooks/useEntity";
 import { IRawEntity } from "@/types/Entity";
 import { contractTxWithToast } from "@/components/web3/contractTxWithToast";
+import { useRouter } from "next/router";
 
 const FormSchema = object({
 	name: string().required("Name is required"),
@@ -29,6 +30,7 @@ const AddProduct: NextPageWithLayout = () => {
 	const { activeAccount, activeSigner, api } = useInkathon();
 	const { contract } = useRegisteredContract(IContractType.EntityRegistry);
 	const { getRawEntitiesByBuyer } = useEntity();
+	const router = useRouter()
 	const formMethods = useForm<Partial<ProductFormValues>>({
 		resolver: yupResolver(FormSchema),
 		defaultValues: {
@@ -88,6 +90,7 @@ const AddProduct: NextPageWithLayout = () => {
 			console.log("Raws", newRaws)
 			await contractTxWithToast(api, activeAccount?.address, contract, "addProductEntity", {}, [data?.name, data?.code, quantity ?? 0, data?.unit, batchNo, newRaws]);
 			toast.success("Product added");
+			router.push("/manufacturer/my-products");
 			setLoading(false);
 		} catch (error) {
 			toast.error(error?.message ?? "Something went wrong");

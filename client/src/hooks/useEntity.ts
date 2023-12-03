@@ -90,12 +90,44 @@ const useEntity = () => {
 		[contract, api, activeAccount]
 	);
 
+	const getAllRawEntities = useCallback(async () => {
+		if (contract && api && activeAccount) {
+			const result = await contractQuery(api, activeAccount?.address, contract, "getAllRawEntities", {}, []);
+
+			const { output, isError, decodedOutput } = decodeOutput(result, contract, "getAllRawEntities");
+
+			if (!isError && output) {
+				return output as IRawEntity[];
+			} else {
+				console.error(decodedOutput);
+				return [] as IRawEntity[];
+			}
+		}
+	}, [contract, api, activeAccount]);
+
+	const getAllProductEntities = useCallback(async () => {
+		if (contract && api && activeAccount) {
+			const result = await contractQuery(api, activeAccount?.address, contract, "getAllProductEntities", {}, []);
+
+			const { output, isError, decodedOutput } = decodeOutput(result, contract, "getAllProductEntities");
+
+			if (!isError && output) {
+				return output as IProductEntity[];
+			} else {
+				console.error(decodedOutput);
+				return [] as IProductEntity[];
+			}
+		}
+	}, [])
+
 	return {
 		getRawEntities,
 		getRawEntitiesByBuyer,
 		getMyProductEntities,
 		getProductEntity,
 		getRawEntitiesByBatchNos,
+		getAllRawEntities,
+		getAllProductEntities,
 	};
 };
 

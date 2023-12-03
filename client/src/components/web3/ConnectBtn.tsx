@@ -15,27 +15,46 @@ import { truncateHash } from "@/utils";
 import { encodeAddress } from "@polkadot/util-crypto";
 import toast from "react-hot-toast";
 import { AiOutlineCheckCircle } from "react-icons/ai";
+import useAuth from "@/hooks/store/useAuth";
+import { useRouter } from "next/router";
 
+/**
+ * Refers to the account name and address injected by the wallet
+ */
 interface AccountNameProps {
 	account: InjectedAccount;
 }
 
 export default function ConnectBtn() {
+	const router = useRouter();
 	const { activeChain, switchActiveChain, connect, disconnect, isConnecting, activeAccount, accounts, setActiveAccount } = useInkathon();
+	// Get the balance of the active account
 	const { balanceFormatted } = useBalance(activeAccount?.address, true, {
 		forceUnit: false,
 		fixedDecimals: 2,
 		removeTrailingZeros: true,
 	});
+	// Get supported chains to use based on the contracts environment
 	const [supportedChains] = useState(contractsEnv.supportedChains.map((networkId) => getSubstrateChain(networkId) as SubstrateChain));
 
+	// a list of all wallets that support the substrate chain and are installed on the browser
 	const [browserWallets] = useState(allSubstrateWallets.filter((w) => w.platforms.includes(SubstrateWalletPlatform.Browser)));
 
+	// SSR check, since we can't check if a wallet is installed on the server
 	const isSSR = useIsSSR();
 
+	// Open external link in a new tab for the wallets install links
 	const openExternalLink = useCallback((url: string) => {
 		window.open(url, "_blank");
 	}, []);
+
+	const { logout } = useAuth();
+
+	const onLogout = async () => {
+		disconnect?.();
+		logout();
+		router.push("/");
+	};
 
 	if (!activeAccount) {
 		return (
@@ -139,7 +158,7 @@ export default function ConnectBtn() {
 					})}
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
-				<DropdownMenuItem onClick={() => disconnect?.()}>
+				<DropdownMenuItem onClick={() => onLogout?.()}>
 					<div className="flex flex-row items-start cursor-pointer">
 						<LogOut className="mr-2 h-4 w-4 hover:text-red-500" />
 						<span className="hover:text-red-500">Disconnect</span>
@@ -154,6 +173,7 @@ const AccountName = ({ account, ...rest }: AccountNameProps) => {
 	const { activeChain } = useInkathon();
 	const doResolveAddress = useMemo(() => Object.values(SupportedChainId).includes(activeChain?.network as SupportedChainId), [activeChain?.network]);
 
+	// Resolve the account address to a domain name
 	const { primaryDomain } = useResolveAddressToDomain(doResolveAddress ? account?.address : undefined, { chainId: activeChain?.network });
 
 	return (

@@ -4,7 +4,11 @@ import { FC } from "react";
 import toast from "react-hot-toast";
 
 type ContractTxWithToastParams = Parameters<typeof contractTx>;
-
+/**
+ * 
+ * @param contractTxParams All parameters for the contractTx function
+ * @returns Returns a promise that resolves to the result of the contractTx function
+ */
 export const contractTxWithToast = async (...contractTxParams: ContractTxWithToastParams) => {
 	return toast.promise(contractTx(...contractTxParams), {
 		loading: "Sending transaction...",
@@ -16,6 +20,11 @@ export const contractTxWithToast = async (...contractTxParams: ContractTxWithToa
 	});
 };
 
+/**
+ * 
+ * @param All parameters for the contractTx function will be passed to this function
+ * @returns A toast component that shows the result of the transaction with a link to view the transaction on the explorer
+ */
 export const ContractTxSuccessToast: FC<ContractTxResult> = ({ extrinsicHash, blockHash }) => {
 	const { activeChain } = useInkathon();
 	const subscanUrl = activeChain?.explorerUrls?.[SubstrateExplorer.Subscan];
@@ -46,6 +55,11 @@ export const ContractTxSuccessToast: FC<ContractTxResult> = ({ extrinsicHash, bl
 	);
 };
 
+/**
+ * 
+ * @param All parameters for the contractTx function will be passed to this function if the transaction fails
+ * @returns Returns a toast component that shows the error message, if its a TokenBelowMinimum error, it will show a link to the faucet
+ */
 export const ContractTxErrorToast: FC<ContractTxResult> = ({ errorMessage }) => {
 	const { activeChain } = useInkathon();
 	const faucetUrl = activeChain?.faucetUrls?.[0];

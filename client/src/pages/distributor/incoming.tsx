@@ -1,19 +1,24 @@
 import Web3TransBtn from "@/components/btn/Web3TransBtn";
+import CustomStack from "@/components/stacks/CustomStack";
 import CustomTable from "@/components/tabler/CustomTable";
 import { Badge } from "@/components/ui/badge";
 import { contractTxWithToast } from "@/components/web3/contractTxWithToast";
+import useAccounts from "@/hooks/useAccounts";
+import useEntity from "@/hooks/useEntity";
 import useInterval from "@/hooks/useInterval";
 import useTransactions from "@/hooks/useTransactions";
 import DistributorLayout from "@/layouts/DistributorLayout";
+import { IAccount } from "@/types/Account";
 import { IContractType } from "@/types/Contracts";
+import { IProductEntity } from "@/types/Entity";
 import { NextPageWithLayout } from "@/types/Layout";
 import { IProductTransaction, TransactionStatus } from "@/types/Transaction";
-import { truncateHash } from "@/utils";
+import { convertFixU64ToNum, mapAddressToAccount, mapCodeToProductEntity, truncateHash } from "@/utils";
 import { useInkathon, useRegisteredContract } from "@scio-labs/use-inkathon";
 import { ColumnDef } from "@tanstack/react-table";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 TimeAgo.addLocale(en);
@@ -29,15 +34,33 @@ const preprocessTimeStamp = (timestamp: string) => {
 
 const Incoming: NextPageWithLayout = () => {
 	const [shipments, setShipments] = useState<IProductTransaction[]>([]);
+	const [products, setProducts] = useState<IProductEntity[]>([]);
+	const [accounts, setAccounts] = useState<IAccount[]>([]);
 
 	const { activeAccount, activeSigner, api } = useInkathon();
 	const { contract } = useRegisteredContract(IContractType.TRANSACTIONS);
 	const { getProductPurchaseTransactionsByBuyer } = useTransactions();
+	const { getAllProductEntities } = useEntity();
+	const { getAccounts } = useAccounts();
 
 	const fetchIncomingShipments = async () => {
 		const items = await getProductPurchaseTransactionsByBuyer();
 		if (items) {
 			setShipments(items);
+		}
+	};
+
+	const fetchAccounts = async () => {
+		const items = await getAccounts();
+		if (items) {
+			setAccounts(items);
+		}
+	};
+
+	const fetchProducts = async () => {
+		const items = await getAllProductEntities();
+		if (items) {
+			setProducts(items);
 		}
 	};
 
@@ -59,23 +82,28 @@ const Incoming: NextPageWithLayout = () => {
 	const columns: ColumnDef<IProductTransaction>[] = [
 		{
 			accessorKey: "productCode",
-			header: "Entity Code",
-			cell: ({ row }) => <div>{row.getValue("productCode")}</div>,
+			header: "Product Code",
+			cell: ({ row }) => (
+				<CustomStack>
+					<p className="text-sm font-semibold">{mapCodeToProductEntity(products, row?.original?.productCode)?.name}</p>
+					<p className="text-xs text-gray-500">{row.original.productCode}</p>
+				</CustomStack>
+			),
 		},
 		{
 			accessorKey: "quantity",
 			header: "Quantity",
-			cell: ({ row }) => <div>{row.getValue("quantity")}</div>,
+			cell: ({ row }) => (
+				<p className="text-sm">
+					<span className="font-semibold">{convertFixU64ToNum(row?.original?.quantity as unknown as string)}</span> {row?.original?.quantityUnit}{" "}
+				</p>
+			),
 		},
-		{
-			accessorKey: "quantityUnit",
-			header: "Unit",
-			cell: ({ row }) => <div>{row.getValue("quantityUnit")}</div>,
-		},
+
 		{
 			accessorKey: "batchNo",
 			header: "Batch No.",
-			cell: ({ row }) => <div>{String(row.getValue("batchNo")).replace(/,/g, "")}</div>,
+			cell: ({ row }) => <div>{convertFixU64ToNum(row.original?.batchNo as unknown as string)}</div>,
 		},
 		{
 			accessorKey: "createdAt",
@@ -89,11 +117,16 @@ const Incoming: NextPageWithLayout = () => {
 		},
 		{
 			accessorKey: "seller",
-			header: "Seller",
-			cell: ({ row }) => <div>{truncateHash(row.getValue("seller"))}</div>,
+			header: "From",
+			cell: ({ row }) => (
+				<CustomStack>
+					<p className="text-sm font-semibold">{mapAddressToAccount(accounts, row.original?.seller)?.name}</p>
+					<p className="text-xs text-gray-500">{truncateHash(row.original?.seller)}</p>
+				</CustomStack>
+			),
 		},
 		{
-			header: "Actions",
+			header: "Actions / Status",
 			enableHiding: false,
 			cell: ({ row }) => (
 				<div className="space-x-2">
@@ -106,8 +139,19 @@ const Incoming: NextPageWithLayout = () => {
 		},
 	];
 
-	useInterval(fetchIncomingShipments, 5000);
-	return <CustomTable<IProductTransaction> data={shipments} columns={columns} searchField="productCode" />;
+	const fetchAllData = async () => {
+		fetchIncomingShipments();
+		fetchAccounts();
+		fetchProducts();
+	};
+
+	useInterval(fetchAllData, 5000);
+
+	useEffect(() => {
+		fetchAllData();
+	}, [activeAccount]);
+
+	return <CustomTable<IProductTransaction> data={shipments} columns={columns} searchField="productCode" searchPlaceholder="Search by Product Code" />;
 };
 
 Incoming.getLayout = (c) => <DistributorLayout>{c}</DistributorLayout>;

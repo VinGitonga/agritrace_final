@@ -1,5 +1,6 @@
 import { IOption } from "@/components/forms/CustomFormControl";
-import { IRawEntity } from "@/types/Entity";
+import { IAccount } from "@/types/Account";
+import { IProductEntity, IRawEntity } from "@/types/Entity";
 import { IBackTrace, IEntityTransaction, IProductTransaction } from "@/types/Transaction";
 import { customAlphabet } from "nanoid";
 
@@ -81,4 +82,20 @@ export const consolidateBackTrace = (products_transactions: IProductTransaction[
 	};
 
 	return backtrace;
+};
+
+export const mapEntityCodetoRawEntity = (rawEntities: IRawEntity[], code: string) => {
+	return rawEntities.find((rawEntity) => rawEntity.code === code);
+};
+
+export const mapAddressToAccount = (accounts: IAccount[], address: string) => {
+	return accounts.find((account) => account.address === address);
+};
+
+export const mapBatchNoToRawEntity = (rawEntities: IRawEntity[], batchNo: string) => {
+	return rawEntities.find((rawEntity) => String(convertFixU64ToNum(rawEntity.batchNo)) === batchNo);
+};
+
+export const mapCodeToProductEntity = (productEntities: IProductEntity[], code: string) => {
+	return productEntities.find((productEntity) => productEntity.code === code);
 };

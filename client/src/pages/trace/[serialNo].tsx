@@ -10,6 +10,7 @@ import { IBackTrace, IStakeholder } from "@/types/Transaction";
 import { consolidateBackTrace } from "@/utils";
 import { useInkathon, useRegisteredContract } from "@scio-labs/use-inkathon";
 import { Loader2 } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -72,8 +73,6 @@ const Trace = () => {
 
 			setProduct(productEntity);
 
-
-
 			toast.loading("Loading Raw Entities 📦 ...", { id });
 
 			console.log(productEntity);
@@ -123,7 +122,9 @@ const Trace = () => {
 		<div className="max-w-screen-xl mx-auto px-4 py-28 gap-12 text-gray-600 md:px-8">
 			<div className="space-y-5 max-w-4xl mx-auto text-center">
 				<ConnectBtn />
-				<h1 className="text-2xl text-indigo-600 font-medium">AgriTrace</h1>
+				<Link href="/">
+					<h1 className="text-2xl text-indigo-600 font-medium">AgriTrace</h1>
+				</Link>
 				<h2 className="text-4xl text-gray-800 font-extrabold mx-auto md:text-5xl">
 					Trace your product with
 					<span className="text-transparent bg-clip-text bg-gradient-to-r from-[#4F46E5] to-[#E114E5]"> AgriTrace</span>

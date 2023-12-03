@@ -2,11 +2,11 @@ import SupplierLayout from "@/layouts/SupplierLayout";
 import { NextPageWithLayout } from "@/types/Layout";
 import { ColumnDef } from "@tanstack/react-table";
 import CustomTable from "@/components/tabler/CustomTable";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IEntityTransaction, TransactionStatus } from "@/types/Transaction";
 import useTransactions from "@/hooks/useTransactions";
 import useInterval from "@/hooks/useInterval";
-import { truncateHash } from "@/utils";
+import { mapAddressToAccount, mapEntityCodetoRawEntity, truncateHash } from "@/utils";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
 import { useInkathon, useRegisteredContract } from "@scio-labs/use-inkathon";
@@ -15,6 +15,11 @@ import toast from "react-hot-toast";
 import { contractTxWithToast } from "@/components/web3/contractTxWithToast";
 import Web3TransBtn from "@/components/btn/Web3TransBtn";
 import { Badge } from "@/components/ui/badge";
+import { IAccount } from "@/types/Account";
+import { IRawEntity } from "@/types/Entity";
+import useEntity from "@/hooks/useEntity";
+import useAccounts from "@/hooks/useAccounts";
+import CustomStack from "@/components/stacks/CustomStack";
 
 TimeAgo.addLocale(en);
 
@@ -29,15 +34,33 @@ const preprocessTimeStamp = (timestamp: string) => {
 
 const Sales: NextPageWithLayout = () => {
 	const [entityTransactions, setEntityTransactions] = useState<IEntityTransaction[]>([]);
+	const [accounts, setAccounts] = useState<IAccount[]>([]);
+	const [rawEntities, setRawEntities] = useState<IRawEntity[]>([]);
 
 	const { getSupplierRawEntityTransactions } = useTransactions();
 	const { activeAccount, activeSigner, api } = useInkathon();
 	const { contract } = useRegisteredContract(IContractType.TRANSACTIONS);
+	const { getAllRawEntities } = useEntity();
+	const { getAccounts } = useAccounts();
 
 	const fetchMyRawEntityTransactions = async () => {
 		const items = await getSupplierRawEntityTransactions();
 		if (items) {
 			setEntityTransactions(items);
+		}
+	};
+
+	const fetchAccounts = async () => {
+		const items = await getAccounts();
+		if (items) {
+			setAccounts(items);
+		}
+	};
+
+	const fetchRawEntities = async () => {
+		const items = await getAllRawEntities();
+		if (items) {
+			setRawEntities(items);
 		}
 	};
 
@@ -56,13 +79,16 @@ const Sales: NextPageWithLayout = () => {
 		}
 	};
 
-	useInterval(fetchMyRawEntityTransactions, 5000);
-
 	const columns: ColumnDef<IEntityTransaction>[] = [
 		{
 			accessorKey: "entityCode",
 			header: "Code",
-			cell: ({ row }) => <div>{row.original.entityCode}</div>,
+			cell: ({ row }) => (
+				<CustomStack>
+					<p className="text-sm font-semibold">{mapEntityCodetoRawEntity(rawEntities, row.original.entityCode)?.name}</p>
+					<p className="text-xs text-gray-500">{row.original.entityCode}</p>
+				</CustomStack>
+			),
 		},
 		{
 			accessorKey: "quantity",
@@ -87,10 +113,15 @@ const Sales: NextPageWithLayout = () => {
 		{
 			accessorKey: "buyer",
 			header: "Buyer",
-			cell: ({ row }) => <div>{truncateHash(row.original.buyer)}</div>,
+			cell: ({ row }) => (
+				<CustomStack>
+					<p className="text-sm font-semibold">{mapAddressToAccount(accounts, row.original?.buyer)?.name}</p>
+					<p className="text-xs text-gray-500">{truncateHash(row.original?.buyer)}</p>
+				</CustomStack>
+			),
 		},
 		{
-			header: "Actions",
+			header: "Actions / Status",
 			enableHiding: false,
 			cell: ({ row }) => (
 				<>
@@ -102,7 +133,19 @@ const Sales: NextPageWithLayout = () => {
 		},
 	];
 
-	return <CustomTable<IEntityTransaction> columns={columns} data={entityTransactions} searchField="entityCode" />;
+	const fetchAll = async () => {
+		fetchMyRawEntityTransactions();
+		fetchAccounts();
+		fetchRawEntities();
+	};
+
+	useInterval(fetchAll, 5000);
+
+	useEffect(() => {
+		fetchAll();
+	}, [activeAccount]);
+
+	return <CustomTable<IEntityTransaction> columns={columns} data={entityTransactions} searchField="entityCode" searchPlaceholder="Search by Code ..." />;
 };
 
 Sales.getLayout = (page) => <SupplierLayout>{page}</SupplierLayout>;

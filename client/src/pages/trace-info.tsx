@@ -104,6 +104,8 @@ const TraceInfo = () => {
 		}
 	};
 
+	console.log(qrCodeUrl)
+
 	return (
 		<div className="max-w-screen-xl mx-auto px-4 py-28 gap-12 text-gray-600 md:px-8">
 			<div className="space-y-5 max-w-4xl mx-auto text-center">
